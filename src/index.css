@@ -2,53 +2,49 @@
 
 @theme {
   /* colors */
+  --color-*: initial;
   --color-white: #ffffff;
   --color-black: #000000;
   --color-midnight: #0f172a;
   --color-purple-bg: #9333ea;
   --color-purple-text: #c084fc;
   --color-grey: #94a3b8;
+  --color-grey-light: #cbd5e1;
 
   /* fonts  */
   --font-sans: "Roboto", sans-serif;
 
-  /* breakpoints */
-  --breakpoint-sm: 320px; /* mobile */
-  --breakpoint-md: 768px; /* tablet */
-  --breakpoint-lg: 1024px; /* desktop */
-  --breakpoint-xl: 1440px; /* grand écran */
-
   /* container */
-  --container-max-sm: 250px;
+  --container-max-sm: 360px;
   --container-max-md: 700px;
   --container-max-lg: 1000px;
   --container-max-xl: 1280px;
 }
 
 @layer base {
-  /* body */
+  html,
   body {
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     font-family: var(--font-sans);
     background-color: var(--color-midnight);
     color: var(--color-white);
     line-height: 1.6;
   }
 
-  /* container */
-  .container {
-    width: 100%;
-    margin-inline: auto;
-    padding-inline: 1rem;
-    max-width: var(--container-max-sm);
-    @media (--md) {
-      max-width: var(--container-max-md);
-    }
-    @media (--lg) {
-      max-width: var(--container-max-lg);
-    }
-    @media (--xl) {
-      max-width: var(--container-max-xl);
-    }
+  #root {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  main {
+    flex-grow: 1;
   }
 
   /* paragraphes & text */
@@ -56,10 +52,10 @@
     font-size: 12px;
     font-weight: 400;
     color: var(--color-white);
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 14px;
     }
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 16px;
     }
   }
@@ -69,10 +65,10 @@
     font-size: 40px;
     font-weight: 800;
     color: var(--color-white);
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 60px;
     }
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 72px;
     }
   }
@@ -81,10 +77,10 @@
     font-size: 26px;
     font-weight: 800;
     color: var(--color-white);
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 36px;
     }
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 56px;
     }
   }
@@ -94,10 +90,10 @@
     font-weight: 700;
     text-transform: uppercase;
     color: var(--color-white);
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 16px;
     }
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 20px;
     }
   }
@@ -107,53 +103,75 @@
     font-weight: 500;
     text-transform: uppercase;
     color: var(--color-grey);
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 14px;
     }
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 16px;
     }
   }
 }
 
 @layer components {
+  /* container */
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    max-width: var(--container-max-sm);
+    @media (min-width: 768px) {
+      max-width: var(--container-max-md);
+    }
+    @media (min-width: 1024px) {
+      max-width: var(--container-max-lg);
+    }
+    @media (min-width: 1280px) {
+      max-width: var(--container-max-xl);
+    }
+  }
+
   /* responsive text */
   .text-responsive {
     font-size: 12px;
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 14px;
     }
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 16px;
     }
   }
 
   /* Button */
-  .filled-button {
+  .basic-button {
     display: inline-block;
-    padding: 12px;
+    padding: 4px;
     font-weight: 500;
     font-size: 12px;
     color: var(--color-white);
-    background-color: var(--color-midnight);
-    border: 1px solid var(--color-white);
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
 
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 14px;
     }
 
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 16px;
+      padding: 12px;
     }
 
     /* Hover or selected */
-    &:hover,
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--color-purple-bg) 60%,
+        transparent
+      );
+    }
+
     &.active {
       background-color: var(--color-purple-bg);
-      border-color: transparent;
     }
   }
 
@@ -167,11 +185,11 @@
     transition: all 0.2s ease-in-out;
     cursor: pointer;
 
-    @media (--md) {
+    @media (min-width: 768px) {
       font-size: 14px;
     }
 
-    @media (--lg) {
+    @media (min-width: 1024px) {
       font-size: 16px;
     }
 
