@@ -1,13 +1,12 @@
+import type React from "react";
+import WIP from "../assets/images/work-in-progress.png";
 import { Link } from "react-router-dom";
 import { pagesUrl } from "../app/appConstants";
 import { motion } from "framer-motion";
-import NotFound from "../assets/images/page-not-found.png";
 
-export function ErrorPage(): React.JSX.Element {
+export function WorkInProgress(): React.JSX.Element {
   return (
-    <div className="flex flex-col items-center gap-4 py-10 text-center md:gap-8">
-      <h1 className="text-[var(--color-purple-text)]">404</h1>
-
+    <>
       <motion.div
         initial={{ opacity: 0, rotateY: 180, scale: 0.8 }}
         animate={{ opacity: 1, rotateY: 0, scale: 1 }}
@@ -18,19 +17,18 @@ export function ErrorPage(): React.JSX.Element {
         className="overflow-hidden rounded-2xl [transform-style:preserve-3d]"
       >
         <img
-          src={NotFound}
-          alt="page non trouvée"
+          src={WIP}
+          alt="travail en cours..."
           className="w-full max-w-xs rounded-2xl md:max-w-md"
         />
       </motion.div>
-
-      <p>La page que vous chercher semble introuvable...</p>
+      <p>La page que vous chercher sera bientôt disponible...</p>
       <Link
         to={pagesUrl.HOME_PAGE}
         className="link text-responsive text-[var(--color-purple-text)]"
       >
         Retourner à la page d'accueil
       </Link>
-    </div>
+    </>
   );
 }
