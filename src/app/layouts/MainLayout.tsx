@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import { Footer } from "../../components/footer/Footer";
 
 export function MainLayout(): React.JSX.Element {
   return (
@@ -13,6 +14,7 @@ export function MainLayout(): React.JSX.Element {
       <main>
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 }
