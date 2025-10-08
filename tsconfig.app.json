@@ -1,28 +1,42 @@
 {
+  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "types": ["vite/client"],
-    "skipLibCheck": true,
+    // File Layout
+    "rootDir": "./src", // where ts files are found
+    "outDir": "./dist", // where js generated files are placed
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
+    // Environment Settings
+    // See also https://aka.ms/tsconfig/module
+    "module": "esnext", // modern JS module syntax
+    "moduleResolution": "bundler", // search format with Vite handles imports
+    "target": "esnext", // JS output version
+    "types": ["react", "react-dom"], // include React globals
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true, // safer object/array indexing
+
+    // Style Options
+    "noImplicitReturns": true, // check, in function, return value presence when expected
+    "noImplicitOverride": true, // force use override keyword when redefining method from parent class
+    "noUnusedLocals": true, // detect local unused variables
+    "noUnusedParameters": true, // detect unused function parameters
+    "noFallthroughCasesInSwitch": true, // avoid unexcepted fallthrough in a switch case (missing break)
+    "noPropertyAccessFromIndexSignature": true, // identify access to dynamic property i/o know property
+
+    // Recommended Options
+    "strict": true, // full type safety
+    "jsx": "react-jsx", // enable React JSX trasnform
+    "verbatimModuleSyntax": true, // keep ES import/export syntax
+    "isolatedModules": true, // compile every file independently (needed for Vite)
+    "moduleDetection": "force", // treat all import/export files as modules
+    "skipLibCheck": true, // skip type checks in node_modules
+
+    "esModuleInterop": true, // help compatibility between CommonJS & ES
+    "forceConsistentCasingInFileNames": true, // enforce consistent file casing
+
+    "allowJs": false // additional safety avoid JS file use
   },
-  "include": ["src"]
+
+  "include": ["src/**/*"], // include all TS file in folder src
+  "exclude": ["node_modules"] // exclude dependencies folder
 }
