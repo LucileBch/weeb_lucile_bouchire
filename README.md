@@ -70,6 +70,7 @@ http://localhost:5173
 src/
 ├── app/
 │   └── router/         # router configuration
+│   └── layouts/        # global layouts
 ├── assets/             # images, icons, logos
 ├── components/         # re-usables components
 ├── core/               # context, hookds, utils, types
@@ -77,7 +78,6 @@ src/
 │   ├── hooks/
 │   ├── utils/
 │   └── types/
-├── layouts/            # global layouts
 ├── pages/              # main pages
 ├── styles/             # style sheets
 │   └── index.css       # main style sheet (Tailwind)
