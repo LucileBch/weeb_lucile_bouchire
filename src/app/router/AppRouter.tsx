@@ -4,18 +4,19 @@ import { SigninPage } from "../../pages/(authentication)/SigninPage";
 import { LoginPage } from "../../pages/(authentication)/LoginPage";
 import { ContactPage } from "../../pages/ContactPage";
 import { HomePage } from "../../pages/HomePage";
-import { ErrorPage } from "../../pages/ErrorPage";
+import { ErrorLayout } from "../layouts/ErrorLayout";
+import { pagesUrl } from "../appConstants";
 
 export const AppRouter = createBrowserRouter([
   {
-    path: "/",
+    path: pagesUrl.HOME_PAGE,
     element: <MainLayout />,
-    errorElement: <ErrorPage />,
+    errorElement: <ErrorLayout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "contact", element: <ContactPage /> },
-      { path: "signin", element: <SigninPage /> },
-      { path: "login", element: <LoginPage /> },
+      { path: pagesUrl.CONTACT_PAGE, element: <ContactPage /> },
+      { path: pagesUrl.SIGN_IN_PAGE, element: <SigninPage /> },
+      { path: pagesUrl.LOGIN_PAGE, element: <LoginPage /> },
     ],
   },
 ]);
