@@ -14,14 +14,8 @@
   /* fonts  */
   --font-sans: "Roboto", sans-serif;
 
-  /* breakpoints */
-  --breakpoint-sm: 320px; /* mobile */
-  --breakpoint-md: 768px; /* tablet */
-  --breakpoint-lg: 1024px; /* desktop */
-  --breakpoint-xl: 1440px; /* grand écran */
-
   /* container */
-  --container-max-sm: 250px;
+  --container-max-sm: 360px;
   --container-max-md: 700px;
   --container-max-lg: 1000px;
   --container-max-xl: 1280px;
@@ -131,7 +125,7 @@
     @media (min-width: 1024px) {
       max-width: var(--container-max-lg);
     }
-    @media (min-width: 1440px) {
+    @media (min-width: 1280px) {
       max-width: var(--container-max-xl);
     }
   }
@@ -148,14 +142,12 @@
   }
 
   /* Button */
-  .filled-button {
+  .basic-button {
     display: inline-block;
-    padding: 12px;
+    padding: 4px;
     font-weight: 500;
     font-size: 12px;
     color: var(--color-white);
-    background-color: var(--color-midnight);
-    border: 1px solid var(--color-white);
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
@@ -166,13 +158,20 @@
 
     @media (min-width: 1024px) {
       font-size: 16px;
+      padding: 12px;
     }
 
     /* Hover or selected */
-    &:hover,
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--color-purple-bg) 60%,
+        transparent
+      );
+    }
+
     &.active {
       background-color: var(--color-purple-bg);
-      border-color: transparent;
     }
   }
 
