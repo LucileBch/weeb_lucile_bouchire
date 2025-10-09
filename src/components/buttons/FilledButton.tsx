@@ -1,5 +1,5 @@
-import type React from "react";
 import { motion } from "framer-motion";
+import type React from "react";
 
 interface IProps {
   label: string;
@@ -12,8 +12,12 @@ export function FilledButton({
 }: Readonly<IProps>): React.JSX.Element {
   return (
     <motion.button
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{
+        opacity: 0.85,
+      }}
+      whileTap={{
+        opacity: 0.7,
+      }}
       transition={{
         duration: 0.3,
         ease: "easeInOut",

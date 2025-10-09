@@ -1,7 +1,7 @@
 import type React from "react";
+import { pagesUrl } from "../../app/appConstants";
 import { NavigationButton } from "../buttons/NavigationButton";
 import { NavLink } from "../links/NavLink";
-import { pagesUrl } from "../../app/appConstants";
 
 export function DesktopNavBar(): React.JSX.Element {
   return (
@@ -13,7 +13,7 @@ export function DesktopNavBar(): React.JSX.Element {
 
       <div className="flex items-center gap-3">
         <NavigationButton label="Connexion" path={pagesUrl.LOGIN_PAGE} />
-        <NavigationButton label="Inscription" path={pagesUrl.SIGN_IN_PAGE} />
+        <NavigationButton label="Inscription" path={pagesUrl.SIGN_UP_PAGE} />
       </div>
     </div>
   );
