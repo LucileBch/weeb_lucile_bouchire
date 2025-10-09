@@ -24,7 +24,7 @@ export function ErrorPage(): React.JSX.Element {
         />
       </motion.div>
 
-      <p>La page que vous chercher semble introuvable...</p>
+      <p>La page que vous cherchez semble introuvable...</p>
       <Link
         to={pagesUrl.HOME_PAGE}
         className="link text-responsive text-[var(--color-purple-text)]"
