@@ -89,6 +89,7 @@
   h3 {
     font-size: 14px;
     font-weight: 700;
+    letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--color-white);
     @media (min-width: 768px) {

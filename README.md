@@ -18,12 +18,6 @@
   <img src="https://img.shields.io/badge/Status-In%20Progress-orange"/>
 </p>
 
-- [x] **React**
-- [x] **TypeScript**
-- [x] **TailwindCSS**
-- [x] **Framer Motion**
-- [ ] Backend **Python** (_coming soon_)
-
 ## ⚙️ Tech Stack
 
 - React - UI framework
@@ -31,6 +25,8 @@
 - TailwindCSS - utility first CSS framework
 - Framer Motion - animations
 - Git - version control
+- Backend **Python** (_coming soon_)
+- Data base **SQL** (_coming soon_)
 
 ## 🚀 Installation
 
@@ -86,7 +82,8 @@ src/
 
 ## 🧱 Next steps
 
-- [ ] implement backend (python, & django)
+- [ ] implement backend (python & django)
+- [ ] implement database (SQL)
 
 ## 👩‍💻 Contributors
 
