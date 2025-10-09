@@ -1,5 +1,10 @@
 import { useCallback } from "react";
 import { homeSliderImages } from "../assets/datas/imagesData";
+import LogoArtAvenue from "../assets/icons/logo-art-avenue.svg";
+import LogoShells from "../assets/icons/logo-shells.svg";
+import LogoSmartFinder from "../assets/icons/logo-smart-finder.svg";
+import LogoWaves from "../assets/icons/logo-waves.svg";
+import LogoZoomerr from "../assets/icons/logo-zoomerr.svg";
 import { FilledButton } from "../components/buttons/FilledButton";
 import { OutlinedButton } from "../components/buttons/OutlinedButton";
 import { Slider } from "../components/Slider";
@@ -46,6 +51,38 @@ export function HomePage(): React.JSX.Element {
         </div>
 
         <Slider images={homeSliderImages} />
+      </section>
+
+      {/* section 2 */}
+      <section className="flex flex-col items-center gap-6 py-10 text-center">
+        <h2>Ils nous font confiance</h2>
+        <div className="flex flex-col items-center justify-center gap-6 md:flex-row md:flex-wrap md:gap-10">
+          <img
+            src={LogoSmartFinder}
+            alt="Smart finder logo"
+            className="h-4 w-auto object-contain md:h-6 lg:h-8"
+          />
+          <img
+            src={LogoZoomerr}
+            alt="Zoomerr logo"
+            className="h-4 w-auto object-contain md:h-6 lg:h-8"
+          />
+          <img
+            src={LogoShells}
+            alt="Shells logo"
+            className="h-4 w-auto object-contain md:h-6 lg:h-8"
+          />
+          <img
+            src={LogoWaves}
+            alt="Waves logo"
+            className="h-4 w-auto object-contain md:h-6 lg:h-8"
+          />
+          <img
+            src={LogoArtAvenue}
+            alt="Art avenue logo"
+            className="h-4 w-auto object-contain md:h-6 lg:h-8"
+          />
+        </div>
       </section>
     </>
   );

@@ -17,7 +17,7 @@ export function Slider({ images }: Readonly<IProps>): React.JSX.Element {
   }, [images.length]);
 
   return (
-    <div className="relative mx-auto my-6 flex h-60 w-full max-w-4xl overflow-hidden rounded-2xl md:h-120">
+    <div className="relative mx-auto flex h-60 w-full max-w-4xl overflow-hidden rounded-2xl md:h-120">
       <AnimatePresence>
         <motion.img
           key={images[index]}
