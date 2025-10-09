@@ -1,8 +1,8 @@
-import type React from "react";
-import WIP from "../assets/images/work-in-progress.png";
-import { Link } from "react-router-dom";
-import { pagesUrl } from "../app/appConstants";
 import { motion } from "framer-motion";
+import type React from "react";
+import { pagesUrl } from "../app/appConstants";
+import WIP from "../assets/images/work-in-progress.png";
+import { ArrowLink } from "./links/ArrowLink";
 
 export function WorkInProgress(): React.JSX.Element {
   return (
@@ -23,12 +23,10 @@ export function WorkInProgress(): React.JSX.Element {
         />
       </motion.div>
       <p>La page que vous cherchez sera bientôt disponible...</p>
-      <Link
-        to={pagesUrl.HOME_PAGE}
-        className="link text-responsive text-[var(--color-purple-text)]"
-      >
-        Retourner à la page d'accueil
-      </Link>
+      <ArrowLink
+        label="Retourner à la page d'accueil"
+        path={pagesUrl.HOME_PAGE}
+      />
     </>
   );
 }

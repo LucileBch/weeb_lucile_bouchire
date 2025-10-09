@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { pagesUrl } from "../app/appConstants";
 import { motion } from "framer-motion";
+import { pagesUrl } from "../app/appConstants";
 import NotFound from "../assets/images/page-not-found.png";
+import { ArrowLink } from "../components/links/ArrowLink";
 
 export function ErrorPage(): React.JSX.Element {
   return (
@@ -25,12 +25,11 @@ export function ErrorPage(): React.JSX.Element {
       </motion.div>
 
       <p>La page que vous cherchez semble introuvable...</p>
-      <Link
-        to={pagesUrl.HOME_PAGE}
-        className="link text-responsive text-[var(--color-purple-text)]"
-      >
-        Retourner à la page d'accueil
-      </Link>
+
+      <ArrowLink
+        label="Retourner à la page d'accueil"
+        path={pagesUrl.HOME_PAGE}
+      />
     </div>
   );
 }
