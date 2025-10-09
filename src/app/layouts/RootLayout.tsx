@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { ErrorSnackbarContextProvider } from "../../core/contexts/ErrorSnackbarContext";
-import { SuccessSnackbarContextProvider } from "../../core/contexts/SuccessSnackBarContext";
+import { SuccessSnackbarContextProvider } from "../../core/contexts/SuccessSnackbarContext";
 
 export function RootLayout(): React.JSX.Element {
   return (
