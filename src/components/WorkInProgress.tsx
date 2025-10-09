@@ -22,7 +22,7 @@ export function WorkInProgress(): React.JSX.Element {
           className="w-full max-w-xs rounded-2xl md:max-w-md"
         />
       </motion.div>
-      <p>La page que vous chercher sera bientôt disponible...</p>
+      <p>La page que vous cherchez sera bientôt disponible...</p>
       <Link
         to={pagesUrl.HOME_PAGE}
         className="link text-responsive text-[var(--color-purple-text)]"

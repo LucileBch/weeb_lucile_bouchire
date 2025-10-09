@@ -6,9 +6,9 @@
 
 ## 🧩 Presentation
 
-**Weeb Frontend** developed as part of the Software Engineer program at DataScientest. This project is the first step in the design of Weeb's company website.
+**Weeb Frontend** developed as part of the Software Engineer program at DataScientest. This project is the first step in the Weeb's company website.
 
-🎯 **Goal**: implement the Home, Contact,and Login Pages, to create solid foundation for futures features (blog, authentication, ...).
+🎯 **Goal**: implement the Home, Contact,and Login Pages, to create solid foundation for future features (blog, authentication, ...).
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-18.0-blue?logo=react"/>
@@ -73,14 +73,14 @@ src/
 │   └── layouts/        # global layouts
 ├── assets/             # images, icons, logos
 ├── components/         # re-usables components
-├── core/               # context, hookds, utils, types
+├── core/               # context, hooks, utils, types
 │   ├── context/
 │   ├── hooks/
 │   ├── utils/
 │   └── types/
 ├── pages/              # main pages
 ├── styles/             # style sheets
-│   └── index.css       # main style sheet (Tailwind)
+│   └── index.css       # main style sheet (Tailwind theme)
 └── main.tsx            # entry point (no App.tsx needed with RouterProvider)
 ```
 
