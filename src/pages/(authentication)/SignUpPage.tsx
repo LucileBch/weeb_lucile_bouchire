@@ -5,7 +5,7 @@ import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { PasswordRules } from "../../components/PasswordRules";
-import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackBarContext";
+import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
 import type { UserCreationDto } from "../../core/dtos/UserCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
@@ -113,7 +113,7 @@ export function SignUpPage(): React.JSX.Element {
         </form>
 
         <div className="flex items-center gap-1">
-          <p>Vous avez déjà un compte ?</p>
+          <p className="text-[var(--color-grey)]">Vous avez déjà un compte ?</p>
           <NavLink label="Connectez-vous !" path={pagesUrl.LOGIN_PAGE} />
         </div>
       </section>

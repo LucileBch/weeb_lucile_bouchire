@@ -26,27 +26,30 @@ export function PasswordInput({
   }, []);
 
   return (
-    <div className="relative flex w-full flex-col items-center">
-      <input
-        type={showPassword ? "text" : "password"}
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className="input"
-      />
-      <button
-        type="button"
-        onClick={handleDisplayPassword}
-        className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-[var(--color-purple-text)] opacity-80 transition-opacity hover:opacity-100"
-      >
-        {showPassword ? (
-          <EyeOff className="h-5 w-5 md:h-6 md:w-6" />
-        ) : (
-          <Eye className="h-5 w-5 md:h-6 md:w-6" />
-        )}
-      </button>
+    <div className="flex w-full flex-col items-center">
+      <div className="relative w-full">
+        <input
+          type={showPassword ? "text" : "password"}
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="input"
+        />
+        <button
+          type="button"
+          onClick={handleDisplayPassword}
+          className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-[var(--color-purple-text)] opacity-80 transition-opacity hover:opacity-100"
+        >
+          {showPassword ? (
+            <EyeOff className="h-5 w-5 md:h-6 md:w-6" />
+          ) : (
+            <Eye className="h-5 w-5 md:h-6 md:w-6" />
+          )}
+        </button>
+      </div>
+
       {error && (
         <span className="mt-1 text-sm text-[var(--color-error)] italic">
           {error}
