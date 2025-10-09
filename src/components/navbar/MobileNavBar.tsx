@@ -1,7 +1,7 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
-import { NavLink } from "../links/NavLink";
 import { pagesUrl } from "../../app/appConstants";
+import { NavLink } from "../links/NavLink";
 
 interface IProps {
   isMenuOpen: boolean;
@@ -44,7 +44,7 @@ export function MobileNavBar({
             />
             <NavLink
               label="Inscription"
-              path={pagesUrl.SIGN_IN_PAGE}
+              path={pagesUrl.SIGN_UP_PAGE}
               onClick={onClose}
             />
           </div>

@@ -3,7 +3,7 @@ export const pagesUrl = {
   HOME_PAGE: "/",
   ABOUT_PAGE: "/about",
   CONTACT_PAGE: "/contact",
-  SIGN_IN_PAGE: "/signin",
+  SIGN_UP_PAGE: "/signin",
   LOGIN_PAGE: "/login",
 
   // error url

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import type React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { CircularProgress } from "../CircularProgress";
@@ -19,7 +20,17 @@ export function NavigationButton({
   const isActive = location.pathname === path;
 
   const button = (
-    <button
+    <motion.button
+      whileHover={{
+        opacity: 0.85,
+      }}
+      whileTap={{
+        opacity: 0.7,
+      }}
+      transition={{
+        duration: 0.3,
+        ease: "easeInOut",
+      }}
       onClick={onClick}
       className={`basic-button ${isActive ? "active" : ""}`}
     >
@@ -28,7 +39,7 @@ export function NavigationButton({
       ) : (
         label
       )}
-    </button>
+    </motion.button>
   );
 
   return <div>{path ? <Link to={path}>{button}</Link> : button}</div>;
