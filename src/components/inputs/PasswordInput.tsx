@@ -27,9 +27,8 @@ export function PasswordInput({
 
   return (
     <div className="relative flex w-full flex-col items-center">
-      {" "}
       <input
-        type="password"
+        type={showPassword ? "text" : "password"}
         id={id}
         name={name}
         placeholder={placeholder}

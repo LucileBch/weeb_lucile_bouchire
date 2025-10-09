@@ -1,10 +1,11 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { PasswordRules } from "../../components/PasswordRules";
+import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackBarContext";
 import type { UserCreationDto } from "../../core/dtos/UserCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
@@ -14,6 +15,10 @@ import {
 } from "../../core/utils/validationRules";
 
 export function SignUpPage(): React.JSX.Element {
+  const { setSuccessMessage, setIsSuccessSnackbarOpen } = useContext(
+    SuccessSnackbarContext,
+  );
+
   const initialFormValues: FormValues<UserCreationDto> = {
     firstName: "",
     lastName: "",
@@ -36,74 +41,82 @@ export function SignUpPage(): React.JSX.Element {
 
   const onSubmit = useCallback(
     async (formData: FormValues<UserCreationDto>) => {
-      alert(`compte créé pour ${formData.firstName} ${formData.lastName}`);
-
+      setSuccessMessage(
+        `Compte créé pour ${formData.firstName} ${formData.lastName}`,
+      );
+      setIsSuccessSnackbarOpen(true);
+      // TODO: send verification code ?
       // TODO: navigate to authenticated home page
     },
-    [],
+    [setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const { formData, formErrors, isSubmitting, handleChange, handleSubmit } =
     useForm({ initialFormValues, validate, onSubmit });
 
   return (
-    <section className="flex flex-col items-center gap-10 py-10 text-center">
-      <h1>S'inscrire</h1>
+    <>
+      <section className="flex flex-col items-center gap-10 py-10 text-center">
+        <h1>S'inscrire</h1>
 
-      <form
-        className="xs:max-w-xs flex w-full flex-col gap-6 rounded-xl border-3 border-[var(--color-purple-text)] bg-[var(--color-purple-bg)]/10 px-10 py-10 md:max-w-2xl"
-        onSubmit={handleSubmit}
-      >
-        <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-          <TextInput
-            id="firstName"
-            placeholder="Prénom"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            error={formErrors.firstName}
-          />
-          <TextInput
-            id="lastName"
-            placeholder="Nom"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            error={formErrors.lastName}
-          />
+        <form
+          className="xs:max-w-xs flex w-full flex-col gap-6 rounded-xl border-3 border-[var(--color-purple-text)] bg-[var(--color-purple-bg)]/10 px-10 py-10 md:max-w-2xl"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+            <TextInput
+              id="firstName"
+              placeholder="Prénom"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              error={formErrors.firstName}
+            />
+            <TextInput
+              id="lastName"
+              placeholder="Nom"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              error={formErrors.lastName}
+            />
+          </div>
+
+          <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+            <TextInput
+              id="email"
+              placeholder="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              type="email"
+              error={formErrors.email}
+            />
+            <PasswordInput
+              id="password"
+              placeholder="Mot de passe"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              error={formErrors.password}
+            />
+          </div>
+
+          <div className="mt-4 flex justify-center">
+            <SubmitButton
+              label="Créer mon compte"
+              isSubmitting={isSubmitting}
+            />
+          </div>
+
+          <PasswordRules />
+        </form>
+
+        <div className="flex items-center gap-1">
+          <p>Vous avez déjà un compte ?</p>
+          <NavLink label="Connectez-vous !" path={pagesUrl.LOGIN_PAGE} />
         </div>
-
-        <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-          <TextInput
-            id="email"
-            placeholder="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            type="email"
-            error={formErrors.email}
-          />
-          <PasswordInput
-            id="password"
-            placeholder="Mot de passe"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            error={formErrors.password}
-          />
-        </div>
-
-        <div className="mt-4 flex justify-center">
-          <SubmitButton label="Créer mon compte" isSubmitting={isSubmitting} />
-        </div>
-
-        <PasswordRules />
-      </form>
-
-      <div className="flex items-center gap-1">
-        <p>Vous avez déjà un compte ?</p>
-        <NavLink label="Connectez-vous !" path={pagesUrl.LOGIN_PAGE} />
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

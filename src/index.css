@@ -11,7 +11,9 @@
   --color-grey: #94a3b8;
   --color-grey-light: #cbd5e1;
   --color-error: #f43f5e;
+  --color-error-light: #fecaca;
   --color-success: #104911;
+  --color-success-light: #b8e0c2;
 
   /* fonts  */
   --font-sans: "Roboto", sans-serif;
