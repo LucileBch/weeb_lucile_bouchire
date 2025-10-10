@@ -6,7 +6,7 @@ import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { PasswordRules } from "../../components/PasswordRules";
 import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
-import type { UserCreationDto } from "../../core/dtos/UserCreationDto";
+import type { UserCreationDto } from "../../core/dtos/user/UserCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
   validateEmail,

@@ -19,15 +19,18 @@ export function useForm<T>({
   >({} as Record<keyof T, string | undefined>);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
 
-    setFormErrors((prev) => ({
-      ...prev,
-      [name]: undefined,
-    }));
-  }, []);
+      setFormErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    },
+    [],
+  );
 
   const validateForm = useCallback(() => {
     const validationErrors = validate(formData);
@@ -91,7 +94,9 @@ interface FormHook<T> {
   formData: FormValues<T>;
   formErrors: Record<keyof T, string | undefined>;
   isSubmitting: boolean;
-  handleChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void;
   validateForm(): boolean;
   resetForm(): void;
   handleSubmit(e: React.FormEvent): void;
