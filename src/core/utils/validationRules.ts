@@ -43,8 +43,8 @@ export function validatePassword(password: string): string | undefined {
   return undefined;
 }
 
-/** Check code safety */
-export function validateCode(
+/** Check not empty field */
+export function validateNotEmpty(
   code: string,
   fieldLabel = "Ce champ",
 ): string | undefined {

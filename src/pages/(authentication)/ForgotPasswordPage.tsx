@@ -6,12 +6,12 @@ import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
-import type { UserCodeRequestDto } from "../../core/dtos/UserCodeRequestDto";
-import type { UserResetPasswordDto } from "../../core/dtos/UserResetPassword";
+import type { UserCodeRequestDto } from "../../core/dtos/user/UserCodeRequestDto";
+import type { UserResetPasswordDto } from "../../core/dtos/user/UserResetPassword";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
-  validateCode,
   validateEmail,
+  validateNotEmpty,
   validatePassword,
 } from "../../core/utils/validationRules";
 
@@ -68,7 +68,7 @@ export function ForgotPasswordPage(): React.JSX.Element {
       {} as Record<keyof UserResetPasswordDto, string | undefined>;
 
     errors.email = validateEmail(formData.email);
-    errors.activationCode = validateCode(formData.activationCode);
+    errors.activationCode = validateNotEmpty(formData.activationCode);
     errors.password = validatePassword(formData.password);
 
     return errors;
