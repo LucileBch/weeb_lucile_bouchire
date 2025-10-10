@@ -18,8 +18,8 @@ export function Header(): React.JSX.Element {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 container py-4 backdrop-blur-xl">
-      <div className="flex w-full items-center justify-between rounded-[16px] bg-current/7 p-3 md:rounded-[20px] md:p-4">
+    <header className="sticky top-0 z-50 py-4">
+      <div className="container flex w-full items-center justify-between rounded-[16px] bg-current/9 p-3 backdrop-blur-xl md:rounded-[20px] md:p-4">
         <Link
           to={pagesUrl.HOME_PAGE}
           className="text-[16px] font-bold transition-opacity hover:opacity-80 sm:text-[22px] md:text-[32px]"
