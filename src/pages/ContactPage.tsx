@@ -56,7 +56,7 @@ export function ContactPage(): React.JSX.Element {
 
   return (
     <section className="flex flex-col items-center gap-10 py-10 text-center">
-      <h1>Votre avis compte !</h1>
+      <h1>Votre avis compte!</h1>
 
       <p className="max-w-3xl">
         Votre retour est essentiel pour nous améliorer ! Partagez votre
