@@ -5,6 +5,7 @@ export const pagesUrl = {
   CONTACT_PAGE: "/contact",
   SIGN_UP_PAGE: "/signin",
   LOGIN_PAGE: "/login",
+  FORGOT_PASSWORD_PAGE: "/forgot-password",
 
   // error url
   ERROR_404: "*",

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { ForgotPasswordPage } from "../../pages/(authentication)/ForgotPasswordPage";
 import { LoginPage } from "../../pages/(authentication)/LoginPage";
 import { SignUpPage } from "../../pages/(authentication)/SignUpPage";
 import { AboutPage } from "../../pages/AboutPage";
@@ -24,6 +25,10 @@ export const AppRouter = createBrowserRouter([
           { path: pagesUrl.CONTACT_PAGE, element: <ContactPage /> },
           { path: pagesUrl.SIGN_UP_PAGE, element: <SignUpPage /> },
           { path: pagesUrl.LOGIN_PAGE, element: <LoginPage /> },
+          {
+            path: pagesUrl.FORGOT_PASSWORD_PAGE,
+            element: <ForgotPasswordPage />,
+          },
         ],
       },
       //TODO: authenticated layout and routes

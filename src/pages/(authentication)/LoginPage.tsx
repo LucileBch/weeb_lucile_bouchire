@@ -5,7 +5,6 @@ import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
-import type { UserCreationDto } from "../../core/dtos/UserCreationDto";
 import type { UserLoginDto } from "../../core/dtos/UserLoginDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
@@ -24,9 +23,11 @@ export function LoginPage(): React.JSX.Element {
   };
 
   // TODO: backend control for rules
-  const validate = (formData: FormValues<UserCreationDto>) => {
-    const errors: Record<keyof UserCreationDto, string | undefined> =
-      {} as Record<keyof UserCreationDto, string | undefined>;
+  const validate = (formData: FormValues<UserLoginDto>) => {
+    const errors: Record<keyof UserLoginDto, string | undefined> = {} as Record<
+      keyof UserLoginDto,
+      string | undefined
+    >;
 
     errors.email = validateEmail(formData.email);
     errors.password = validatePassword(formData.password);
@@ -35,7 +36,7 @@ export function LoginPage(): React.JSX.Element {
   };
 
   const onSubmit = useCallback(
-    async (formData: FormValues<UserCreationDto>) => {
+    async (formData: FormValues<UserLoginDto>) => {
       setSuccessMessage(`Bon retour parmis nous ${formData.email}.`);
       setIsSuccessSnackbarOpen(true);
       // TODO: navigate to authenticated home page
@@ -79,6 +80,13 @@ export function LoginPage(): React.JSX.Element {
             <SubmitButton label="Se connecter" isSubmitting={isSubmitting} />
           </div>
         </form>
+
+        <div>
+          <NavLink
+            label="Mot de passe oublié ?"
+            path={pagesUrl.FORGOT_PASSWORD_PAGE}
+          />
+        </div>
 
         <div className="flex items-center gap-1">
           <p className="text-[var(--color-grey)]">

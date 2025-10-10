@@ -42,3 +42,14 @@ export function validatePassword(password: string): string | undefined {
 
   return undefined;
 }
+
+/** Check code safety */
+export function validateCode(
+  code: string,
+  fieldLabel = "Ce champ",
+): string | undefined {
+  if (!code) return `${fieldLabel} est requis`;
+  if (code.trim().length < 2)
+    return `${fieldLabel} doit contenir au moins 2 caractères`;
+  return undefined;
+}
