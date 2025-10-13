@@ -29,6 +29,7 @@ export function TextInput({
         value={value}
         onChange={onChange}
         className="input"
+        autoComplete="off"
       />
 
       {error && (
