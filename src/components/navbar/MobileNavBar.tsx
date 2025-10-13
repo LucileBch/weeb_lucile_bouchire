@@ -25,8 +25,7 @@ export function MobileNavBar({
           }}
           className="overflow-hidden lg:hidden"
         >
-          {" "}
-          <div className="mt-2 flex flex-col items-center gap-4 rounded-[16px] bg-current/10 p-4">
+          <div className="mt-2 flex flex-col items-center gap-4 rounded-[16px] border-2 border-[var(--color-midnight)] bg-[rgba(15,23,42,0.75)] p-4">
             <NavLink
               label="À propos"
               path={pagesUrl.ABOUT_PAGE}
