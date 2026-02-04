@@ -28,7 +28,6 @@ export function TextAreaInput({
         className="input resize-none"
         rows={2}
       />
-
       {error && (
         <span className="mt-1 text-sm text-[var(--color-error)] italic">
           {error}
