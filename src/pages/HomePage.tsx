@@ -28,7 +28,7 @@ export function HomePage(): React.JSX.Element {
     <>
       {/* section 1 */}
       <section className="flex flex-col items-center gap-6 py-10 text-center">
-        <h1 className="text-center">
+        <h1 className="mb-2 text-center">
           Explorez le{" "}
           <span className="font-light text-[var(--color-purple-text)]">
             Web
@@ -93,7 +93,7 @@ export function HomePage(): React.JSX.Element {
 
       {/* section 3 */}
       <section className="flex flex-col items-center py-10 md:flex-row md:gap-6">
-        <div className="flex flex-col items-center gap-2 py-10 text-center md:items-start md:text-start">
+        <div className="flex flex-col items-center gap-4 py-10 text-center md:items-start md:text-start">
           <h3>Des ressources pour tous les niveaux</h3>
           <h2>
             <span className="text-[var(--color-purple-text)]">Apprenez</span> et{" "}
@@ -143,7 +143,7 @@ export function HomePage(): React.JSX.Element {
           viewport={{ once: true, amount: 0.4 }}
         />
 
-        <div className="flex flex-col items-center gap-2 py-10 text-center md:items-end md:text-end">
+        <div className="flex flex-col items-center gap-4 py-10 text-center md:items-end md:text-end">
           <h3>Le web, un écosystème en constante évolution</h3>
           <h2>
             Restez informé des dernières{" "}
