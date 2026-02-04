@@ -84,7 +84,6 @@ export function ContactPage(): React.JSX.Element {
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            type="lastName"
             error={formErrors.lastName}
           />
         </div>
