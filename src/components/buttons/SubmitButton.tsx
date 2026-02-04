@@ -23,7 +23,7 @@ export function SubmitButton({
         duration: 0.3,
         ease: "easeInOut",
       }}
-      className={`text-responsive inline-flex items-center justify-center rounded-lg px-2 py-1 transition-all duration-300 lg:px-3 lg:py-3 ${
+      className={`text-responsive inline-flex items-center justify-center rounded-lg px-4 py-2 transition-all duration-300 lg:px-6 lg:py-3 ${
         isSubmitting
           ? "cursor-default bg-[var(--color-purple-bg)]"
           : "cursor-pointer bg-[var(--color-purple-bg)]"
