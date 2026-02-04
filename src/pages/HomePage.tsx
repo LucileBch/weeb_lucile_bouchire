@@ -45,7 +45,7 @@ export function HomePage(): React.JSX.Element {
           vous offre du contenu de qualité pour rester à la pointe.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="mb-4 flex flex-wrap items-center justify-center gap-4 md:mb-8">
           <FilledButton
             label="Découvrir les articles"
             onClick={handleDiscover}
@@ -61,7 +61,7 @@ export function HomePage(): React.JSX.Element {
 
       {/* section 2 */}
       <section className="flex flex-col items-center gap-6 py-10 text-center">
-        <h2>Ils nous font confiance</h2>
+        <h2 className="md-mb-8 mb-2">Ils nous font confiance</h2>
         <div className="flex flex-col items-center justify-center gap-6 md:flex-row md:flex-wrap md:gap-10">
           <img
             src={LogoSmartFinder}
@@ -93,13 +93,13 @@ export function HomePage(): React.JSX.Element {
 
       {/* section 3 */}
       <section className="flex flex-col items-center py-10 md:flex-row md:gap-6">
-        <div className="flex flex-col items-center gap-6 py-10 text-center md:items-start md:text-start">
+        <div className="flex flex-col items-center gap-2 py-10 text-center md:items-start md:text-start">
           <h3>Des ressources pour tous les niveaux</h3>
           <h2>
             <span className="text-[var(--color-purple-text)]">Apprenez</span> et{" "}
             <span className="text-[var(--color-purple-text)]">progressez</span>
           </h2>
-          <p>
+          <p className="mb-6">
             Que vous débutiez en développement web ou que vous soyez un expert
             cherchant à approfondir vos connaissances, nous vous proposons des
             tutoriels, guides et bonnes pratiques pour apprendre efficacement.
@@ -143,7 +143,7 @@ export function HomePage(): React.JSX.Element {
           viewport={{ once: true, amount: 0.4 }}
         />
 
-        <div className="flex flex-col items-center gap-6 py-10 text-center md:items-end md:text-end">
+        <div className="flex flex-col items-center gap-2 py-10 text-center md:items-end md:text-end">
           <h3>Le web, un écosystème en constante évolution</h3>
           <h2>
             Restez informé des dernières{" "}
