@@ -45,7 +45,8 @@ INSTALLED_APPS = [
 
     # ===== apps =====
     'users',
-    'articles'
+    'articles',
+    'reviews'
 ]
 
 # Custom user model

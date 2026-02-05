@@ -22,7 +22,7 @@ lerna-debug.log*
 weeb_api/env/
 weeb_api/.env
 #to delete when we go on cloudinary
-weeb_api/media/
+weeb_api/api/media/
 **/__pycache__/
 *.pyc
 
