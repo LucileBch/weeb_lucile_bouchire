@@ -1,4 +1,4 @@
-# Logs
+# ===== Logs =====
 logs
 *.log
 npm-debug.log*
@@ -7,12 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# ===== Editor directories and files =====
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +17,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ===== BACKEND =====
+weeb_api/env/
+weeb_api/.env
+__pycache__/
+*.pyc
+
+# ===== PYTHON =====
+*.sqlite3
+
+# ===== FRONTEND =====
+weeb_frontend/node_modules
+weeb_frontend/dist
+weeb_frontend/dist-ssr
+weeb_frontend/.env*
+*.local
