@@ -10,7 +10,15 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ("email", "first_name", "last_name")
     ordering = ("email",)
     
-    # config for update form
+    # config to create user
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password', 'first_name', 'last_name', 'is_active',),
+        }),
+    )
+
+    # config to update user
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Infos personnelles", {"fields": ("first_name", "last_name")}),

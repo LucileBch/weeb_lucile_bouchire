@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,13 +31,6 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
-    # ===== dependencies =====
-    'rest_framework',
-    'corsheaders',
-
-    # ===== apps =====
-    'users',
-
     # ===== Django =====
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # ===== dependencies =====
+    'rest_framework',
+    'corsheaders',
+
+    # ===== apps =====
+    'users',
+    'articles'
 ]
 
 # Custom user model
@@ -124,3 +126,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# ===== MEDIAS =====
+# URL used by navigator
+MEDIA_URL = '/media/'
+# fisical directory on my compu
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

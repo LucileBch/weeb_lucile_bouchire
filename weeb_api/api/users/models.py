@@ -11,8 +11,8 @@ class CustomUser(AbstractUser):
     # remove username field
     username = None
 
-    first_name = models.CharField("prénom",max_length=50, blank = False, null = False, help_text="Prénom de l'utilisateur requis.")
-    last_name = models.CharField("nom de famille",max_length=50, blank = False, null = False, help_text="Nom de famille de l'utilisateur requis.")
+    first_name = models.CharField("prénom", max_length=50, blank = False, null = False, help_text="Prénom de l'utilisateur requis.")
+    last_name = models.CharField("nom de famille", max_length=50, blank = False, null = False, help_text="Nom de famille de l'utilisateur requis.")
     email = models.EmailField("addresse email", unique=True, help_text="L'adresse email valide est requise pour l'identification.")
 
     # should be cehcked by admin to validate new account
