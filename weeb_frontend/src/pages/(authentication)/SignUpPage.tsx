@@ -1,14 +1,17 @@
 // ---------- SIGN UP PAGE ---------- //
 import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { PasswordRules } from "../../components/PasswordRules";
+import { useAuthContext } from "../../core/contexts/auth/AuthContext";
 import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserCreationDto } from "../../core/dtos/user/UserCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
+import { handleNavigation } from "../../core/utils/helpers";
 import {
   validateEmail,
   validateName,
@@ -16,23 +19,25 @@ import {
 } from "../../core/utils/validationRules";
 
 export function SignUpPage(): React.JSX.Element {
+  const navigate = useNavigate();
+
   const { setSuccessMessage, setIsSuccessSnackbarOpen } =
     useSuccessSnarckbarContext();
+  const { createUser } = useAuthContext();
 
   const initialFormValues: FormValues<UserCreationDto> = {
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
   };
 
-  // TODO: backend control for rules
   const validate = (formData: FormValues<UserCreationDto>) => {
     const errors: Record<keyof UserCreationDto, string | undefined> =
       {} as Record<keyof UserCreationDto, string | undefined>;
 
-    errors.firstName = validateName(formData.firstName, "Le prénom");
-    errors.lastName = validateName(formData.lastName, "Le nom");
+    errors.first_name = validateName(formData.first_name, "Le prénom");
+    errors.last_name = validateName(formData.last_name, "Le nom");
     errors.email = validateEmail(formData.email);
     errors.password = validatePassword(formData.password);
 
@@ -41,14 +46,15 @@ export function SignUpPage(): React.JSX.Element {
 
   const onSubmit = useCallback(
     async (formData: FormValues<UserCreationDto>) => {
+      await createUser(formData);
+
       setSuccessMessage(
-        `Compte créé pour ${formData.firstName} ${formData.lastName}`,
+        `Compte créé pour ${formData.first_name} ${formData.last_name}.En attente d'activation par l'administrateur`,
       );
       setIsSuccessSnackbarOpen(true);
-      // TODO: send verification code ?
-      // TODO: navigate to authenticated home page
+      handleNavigation(navigate, "/");
     },
-    [setIsSuccessSnackbarOpen, setSuccessMessage],
+    [createUser, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const { formData, formErrors, isSubmitting, handleChange, handleSubmit } =
@@ -67,18 +73,18 @@ export function SignUpPage(): React.JSX.Element {
             <TextInput
               id="firstName"
               placeholder="Prénom"
-              name="firstName"
-              value={formData.firstName}
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
-              error={formErrors.firstName}
+              error={formErrors.first_name}
             />
             <TextInput
               id="lastName"
               placeholder="Nom"
-              name="lastName"
-              value={formData.lastName}
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
-              error={formErrors.lastName}
+              error={formErrors.last_name}
             />
           </div>
 

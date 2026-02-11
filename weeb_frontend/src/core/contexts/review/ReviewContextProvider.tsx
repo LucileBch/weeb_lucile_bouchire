@@ -1,15 +1,15 @@
-// ---------- REVIEWS CONTEXT PROVIDER ---------- //
+// ---------- REVIEW CONTEXT PROVIDER ---------- //
 import { useCallback, useMemo, type PropsWithChildren } from "react";
 import { endpoints } from "../../api/endpoints";
 
 import type { ReviewDto } from "../../dtos/ReviewDto";
-import { useReviews } from "../../hooks/useReviews";
+import { useReview } from "../../hooks/useReview";
 import { ReviewContext } from "./ReviewContext";
 
 export function ReviewContextProvider({
   children,
 }: Readonly<PropsWithChildren>) {
-  const { postReview } = useReviews();
+  const { postReview } = useReview();
 
   const createNewReview = useCallback(
     async (reviewDto: ReviewDto): Promise<void> => {

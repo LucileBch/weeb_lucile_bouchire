@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SubmitButton } from "../components/buttons/SubmitButton";
 import { TextAreaInput } from "../components/inputs/TextAreaInput";
 import { TextInput } from "../components/inputs/TextInput";
-import { useReviewContext } from "../core/contexts/reviews/ReviewContext";
+import { useReviewContext } from "../core/contexts/review/ReviewContext";
 import { useSuccessSnarckbarContext } from "../core/contexts/success/SuccessSnackbarContext";
 import type { ReviewDto } from "../core/dtos/ReviewDto";
 import { useForm, type FormValues } from "../core/hooks/useForm";

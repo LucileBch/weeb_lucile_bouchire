@@ -2,12 +2,23 @@ import re
 from rest_framework import serializers
 from .models import CustomUser
 from django.core.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
     Register Serializer
     Create user account
     """
+    email = serializers.EmailField(
+        # On ajoute manuellement le validateur d'unicité ici
+        validators=[
+            UniqueValidator(
+                queryset=CustomUser.objects.all(),
+                message="Ce compte existe déjà et est en attente d'activation par l'administrateur."
+            )
+        ]
+    )
+
     password = serializers.CharField(
         write_only=True,
         min_length=8,
