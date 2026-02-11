@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import type React from "react";
 import { pagesUrl } from "../app/appConstants";
-import WIP from "../assets/images/work-in-progress.png";
+import WIP from "../assets/images/work-in-progress.webp";
 import { ArrowLink } from "./links/ArrowLink";
 
 export function WorkInProgress(): React.JSX.Element {
