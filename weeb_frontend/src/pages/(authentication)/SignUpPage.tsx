@@ -1,11 +1,12 @@
-import { useCallback, useContext } from "react";
+// ---------- SIGN UP PAGE ---------- //
+import { useCallback } from "react";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { PasswordRules } from "../../components/PasswordRules";
-import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
+import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserCreationDto } from "../../core/dtos/user/UserCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
@@ -15,9 +16,8 @@ import {
 } from "../../core/utils/validationRules";
 
 export function SignUpPage(): React.JSX.Element {
-  const { setSuccessMessage, setIsSuccessSnackbarOpen } = useContext(
-    SuccessSnackbarContext,
-  );
+  const { setSuccessMessage, setIsSuccessSnackbarOpen } =
+    useSuccessSnarckbarContext();
 
   const initialFormValues: FormValues<UserCreationDto> = {
     firstName: "",

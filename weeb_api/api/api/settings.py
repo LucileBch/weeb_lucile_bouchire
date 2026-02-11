@@ -31,7 +31,6 @@ DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 INSTALLED_APPS = [
     # ===== Django =====
@@ -70,7 +69,7 @@ MIDDLEWARE = [
 # ===== CORS =====
 # origins
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173" # Frontend dev
+    "http://localhost:5173", # Frontend dev
 ]
 # needed for authentication infos send by frontend
 CORS_ALLOW_CREDENTIALS = True 

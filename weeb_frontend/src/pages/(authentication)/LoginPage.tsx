@@ -1,11 +1,12 @@
-import { useCallback, useContext } from "react";
+// ---------- LOGIN PAGE ---------- //
+import { useCallback } from "react";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { ArrowLink } from "../../components/links/ArrowLink";
 import { NavLink } from "../../components/links/NavLink";
-import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
+import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserLoginDto } from "../../core/dtos/user/UserLoginDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import {
@@ -14,9 +15,8 @@ import {
 } from "../../core/utils/validationRules";
 
 export function LoginPage(): React.JSX.Element {
-  const { setSuccessMessage, setIsSuccessSnackbarOpen } = useContext(
-    SuccessSnackbarContext,
-  );
+  const { setSuccessMessage, setIsSuccessSnackbarOpen } =
+    useSuccessSnarckbarContext();
 
   const initialFormValues: FormValues<UserLoginDto> = {
     email: "",

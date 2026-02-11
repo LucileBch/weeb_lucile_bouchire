@@ -1,3 +1,4 @@
+// ---------- ABOUT PAGE ---------- //
 import { WorkInProgress } from "../components/WorkInProgress";
 
 export function AboutPage(): React.JSX.Element {

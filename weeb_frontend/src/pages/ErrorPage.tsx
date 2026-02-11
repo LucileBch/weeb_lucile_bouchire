@@ -1,3 +1,4 @@
+// ---------- ERROR PAGE ---------- //
 import { motion } from "framer-motion";
 import { pagesUrl } from "../app/appConstants";
 import NotFound from "../assets/images/page-not-found.png";

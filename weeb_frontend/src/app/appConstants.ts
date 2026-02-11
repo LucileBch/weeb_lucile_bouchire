@@ -1,3 +1,4 @@
+// ---------- URLS' PAGES ---------- //
 export const pagesUrl = {
   // main url
   HOME_PAGE: "/",
