@@ -1,8 +1,7 @@
-// might be serializer with Django DRF
-// TBC in the next step
+// ---------- USER CREATION DTO ---------- //
 export interface UserCreationDto {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
 }
