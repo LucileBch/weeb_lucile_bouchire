@@ -4,6 +4,7 @@ import { ForgotPasswordPage } from "../../pages/(authentication)/ForgotPasswordP
 import { LoginPage } from "../../pages/(authentication)/LoginPage";
 import { SignUpPage } from "../../pages/(authentication)/SignUpPage";
 import { AboutPage } from "../../pages/AboutPage";
+import { BlogPage } from "../../pages/BlogPage";
 import { ContactPage } from "../../pages/ContactPage";
 import { HomePage } from "../../pages/HomePage";
 import { pagesUrl } from "../appConstants";
@@ -24,6 +25,7 @@ export const AppRouter = createBrowserRouter([
           { index: true, element: <HomePage /> },
           { path: pagesUrl.ABOUT_PAGE, element: <AboutPage /> },
           { path: pagesUrl.CONTACT_PAGE, element: <ContactPage /> },
+          { path: pagesUrl.BLOG_PAGE, element: <BlogPage /> },
           { path: pagesUrl.SIGN_UP_PAGE, element: <SignUpPage /> },
           { path: pagesUrl.LOGIN_PAGE, element: <LoginPage /> },
           {

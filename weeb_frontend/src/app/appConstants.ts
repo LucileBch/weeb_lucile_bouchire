@@ -4,6 +4,7 @@ export const pagesUrl = {
   HOME_PAGE: "/",
   ABOUT_PAGE: "/about",
   CONTACT_PAGE: "/contact",
+  BLOG_PAGE: "/articles",
   SIGN_UP_PAGE: "/signup",
   LOGIN_PAGE: "/login",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
