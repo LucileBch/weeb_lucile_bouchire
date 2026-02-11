@@ -1,15 +1,11 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
-import { SuccessSnackBar } from "../../components/snackbars/SuccessSnackBar";
+// ---------- SUCCESS CONTEXT PROVIDER ---------- //
+import React, { useCallback, useMemo, useState } from "react";
 
-export const SuccessSnackbarContext = React.createContext<SuccessSnackbarStore>(
-  {} as SuccessSnackbarStore,
-);
+import { SuccessSnackBar } from "../../../components/snackbars/SuccessSnackBar";
+import {
+  SuccessSnackbarContext,
+  type SuccessSnackbarStore,
+} from "./SuccessSnackbarContext";
 
 export function SuccessSnackbarContextProvider({
   children,
@@ -43,9 +39,4 @@ export function SuccessSnackbarContextProvider({
       />
     </SuccessSnackbarContext.Provider>
   );
-}
-
-export interface SuccessSnackbarStore {
-  setSuccessMessage: Dispatch<SetStateAction<string | undefined>>;
-  setIsSuccessSnackbarOpen: Dispatch<SetStateAction<boolean>>;
 }

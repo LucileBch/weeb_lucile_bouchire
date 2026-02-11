@@ -1,3 +1,4 @@
+// ---------- HOME PAGE ---------- //
 import { motion } from "framer-motion";
 import { useCallback, useRef } from "react";
 import { homeSliderImages } from "../assets/datas/imagesData";

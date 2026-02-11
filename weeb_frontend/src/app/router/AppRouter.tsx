@@ -1,3 +1,4 @@
+// ---------- APP ROUTER ---------- //
 import { createBrowserRouter } from "react-router-dom";
 import { ForgotPasswordPage } from "../../pages/(authentication)/ForgotPasswordPage";
 import { LoginPage } from "../../pages/(authentication)/LoginPage";

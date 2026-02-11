@@ -1,4 +1,7 @@
+// ---------- FORM HOOK ---------- //
 import { useCallback, useMemo, useState } from "react";
+import { useErrorSnackbarContext } from "../contexts/error/ErrorSnackbarContext";
+import { formatServerError } from "../utils/errorHandler";
 
 export type FormValues<T> = T;
 
@@ -13,6 +16,8 @@ export function useForm<T>({
   validate,
   onSubmit,
 }: Readonly<IProps<T>>): FormHook<T> {
+  const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
+
   const [formData, setFormData] = useState<FormValues<T>>(initialFormValues);
   const [formErrors, setFormErrors] = useState<
     Record<keyof T, string | undefined>
@@ -60,12 +65,21 @@ export function useForm<T>({
         await onSubmit(formData);
         resetForm();
       } catch (error) {
-        console.error("Erreur lors de la soumission :", error);
+        const serverMessage = formatServerError(error);
+        setErrorMessage(serverMessage);
+        setIsErrorSnackbarOpen(true);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [formData, onSubmit, resetForm, validateForm],
+    [
+      formData,
+      onSubmit,
+      resetForm,
+      setErrorMessage,
+      setIsErrorSnackbarOpen,
+      validateForm,
+    ],
   );
 
   return useMemo(

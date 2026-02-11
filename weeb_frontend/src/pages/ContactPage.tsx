@@ -1,10 +1,14 @@
-import { useCallback, useContext } from "react";
+// ---------- CONTACT PAGE ---------- //
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { SubmitButton } from "../components/buttons/SubmitButton";
 import { TextAreaInput } from "../components/inputs/TextAreaInput";
 import { TextInput } from "../components/inputs/TextInput";
-import { SuccessSnackbarContext } from "../core/contexts/SuccessSnackbarContext";
-import type { ContactDto } from "../core/dtos/ContactDto";
+import { useReviewContext } from "../core/contexts/reviews/ReviewContext";
+import { useSuccessSnarckbarContext } from "../core/contexts/success/SuccessSnackbarContext";
+import type { ReviewDto } from "../core/dtos/ReviewDto";
 import { useForm, type FormValues } from "../core/hooks/useForm";
+import { handleNavigation } from "../core/utils/helpers";
 import {
   validateEmail,
   validateName,
@@ -12,27 +16,28 @@ import {
 } from "../core/utils/validationRules";
 
 export function ContactPage(): React.JSX.Element {
-  const { setSuccessMessage, setIsSuccessSnackbarOpen } = useContext(
-    SuccessSnackbarContext,
-  );
+  const navigate = useNavigate();
 
-  const initialFormValues: FormValues<ContactDto> = {
-    firstName: "",
-    lastName: "",
+  const { setSuccessMessage, setIsSuccessSnackbarOpen } =
+    useSuccessSnarckbarContext();
+  const { createNewReview } = useReviewContext();
+
+  const initialFormValues: FormValues<ReviewDto> = {
+    first_name: "",
+    last_name: "",
     email: "",
     subject: "",
     message: "",
   };
 
-  // TODO: backend control for rules
-  const validate = (formData: FormValues<ContactDto>) => {
-    const errors: Record<keyof ContactDto, string | undefined> = {} as Record<
-      keyof ContactDto,
+  const validate = (formData: FormValues<ReviewDto>) => {
+    const errors: Record<keyof ReviewDto, string | undefined> = {} as Record<
+      keyof ReviewDto,
       string | undefined
     >;
 
-    errors.firstName = validateName(formData.firstName);
-    errors.lastName = validateName(formData.lastName);
+    errors.first_name = validateName(formData.first_name);
+    errors.last_name = validateName(formData.last_name);
     errors.email = validateEmail(formData.email);
     errors.subject = validateNotEmpty(formData.subject);
     errors.message = validateNotEmpty(formData.message);
@@ -41,14 +46,16 @@ export function ContactPage(): React.JSX.Element {
   };
 
   const onSubmit = useCallback(
-    async (formData: FormValues<ContactDto>) => {
+    async (formData: FormValues<ReviewDto>) => {
+      await createNewReview(formData);
+
       setSuccessMessage(
-        `${formData.firstName} ${formData.lastName} merci pour votre message. Nous reviendrons vers vous rapidement.`,
+        `${formData.first_name} ${formData.last_name} merci pour votre avis. Nous reviendrons vers vous rapidement.`,
       );
       setIsSuccessSnackbarOpen(true);
-      // TODO: navigate to home page
+      handleNavigation(navigate, "/");
     },
-    [setIsSuccessSnackbarOpen, setSuccessMessage],
+    [createNewReview, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const { formData, formErrors, isSubmitting, handleChange, handleSubmit } =
@@ -73,18 +80,18 @@ export function ContactPage(): React.JSX.Element {
           <TextInput
             id="firstName"
             placeholder="Prénom"
-            name="firstName"
-            value={formData.firstName}
+            name="first_name"
+            value={formData.first_name}
             onChange={handleChange}
-            error={formErrors.firstName}
+            error={formErrors.first_name}
           />
           <TextInput
             id="lastName"
             placeholder="Nom"
-            name="lastName"
-            value={formData.lastName}
+            name="last_name"
+            value={formData.last_name}
             onChange={handleChange}
-            error={formErrors.lastName}
+            error={formErrors.last_name}
           />
         </div>
         <div className="flex flex-col gap-4 md:flex-row md:gap-6">

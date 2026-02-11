@@ -1,15 +1,10 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
-import { ErrorSnackBar } from "../../components/snackbars/ErrorSnackBar";
-
-export const ErrorSnackbarContext = React.createContext<ErrorSnackbarStore>(
-  {} as ErrorSnackbarStore,
-);
+// ---------- ERROR CONTEXT PROVIDER ---------- //
+import React, { useCallback, useMemo, useState } from "react";
+import { ErrorSnackBar } from "../../../components/snackbars/ErrorSnackBar";
+import {
+  ErrorSnackbarContext,
+  type ErrorSnackbarStore,
+} from "./ErrorSnackbarContext";
 
 export function ErrorSnackbarContextProvider({
   children,
@@ -43,9 +38,4 @@ export function ErrorSnackbarContextProvider({
       />
     </ErrorSnackbarContext.Provider>
   );
-}
-
-export interface ErrorSnackbarStore {
-  setErrorMessage: Dispatch<SetStateAction<string | undefined>>;
-  setIsErrorSnackbarOpen: Dispatch<SetStateAction<boolean>>;
 }

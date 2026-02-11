@@ -1,11 +1,12 @@
+// ---------- FORGOT PASSWORD PAGE ---------- //
 import type React from "react";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
-import { SuccessSnackbarContext } from "../../core/contexts/SuccessSnackbarContext";
+import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserCodeRequestDto } from "../../core/dtos/user/UserCodeRequestDto";
 import type { UserResetPasswordDto } from "../../core/dtos/user/UserResetPassword";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
@@ -16,9 +17,8 @@ import {
 } from "../../core/utils/validationRules";
 
 export function ForgotPasswordPage(): React.JSX.Element {
-  const { setSuccessMessage, setIsSuccessSnackbarOpen } = useContext(
-    SuccessSnackbarContext,
-  );
+  const { setSuccessMessage, setIsSuccessSnackbarOpen } =
+    useSuccessSnarckbarContext();
 
   const [isEmailSent, setIsEmailSent] = useState<boolean>(false);
 
