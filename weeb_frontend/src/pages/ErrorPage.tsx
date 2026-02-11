@@ -1,7 +1,7 @@
 // ---------- ERROR PAGE ---------- //
 import { motion } from "framer-motion";
 import { pagesUrl } from "../app/appConstants";
-import NotFound from "../assets/images/page-not-found.png";
+import NotFound from "../assets/images/page-not-found.webp";
 import { ArrowLink } from "../components/links/ArrowLink";
 
 export function ErrorPage(): React.JSX.Element {

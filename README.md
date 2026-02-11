@@ -1,7 +1,7 @@
 ## 🌐 **Weeb**
 
 <p align="center">
-  <img src="src/assets/images/preview.png" alt="Project Preview" width="700"/>
+  <img src="src/assets/images/preview.webp" alt="Project Preview" width="700"/>
 </p>
 
 ## 🧩 Presentation
