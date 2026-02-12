@@ -3,6 +3,9 @@ export const endpoints = {
   // review
   postReview: "/reviews/",
 
+  // article
+  getArticles: "/articles/",
+
   // auth
   signup: "/auth/signup/",
 };
