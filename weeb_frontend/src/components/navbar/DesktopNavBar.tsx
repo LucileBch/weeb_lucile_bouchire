@@ -9,6 +9,7 @@ export function DesktopNavBar(): React.JSX.Element {
       <nav className="flex items-center gap-6">
         <NavLink label="À propos" path={pagesUrl.ABOUT_PAGE} />
         <NavLink label="Contact" path={pagesUrl.CONTACT_PAGE} />
+        <NavLink label="Blog" path={pagesUrl.BLOG_PAGE} />
       </nav>
 
       <div className="flex items-center gap-3">

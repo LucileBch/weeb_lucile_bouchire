@@ -1,6 +1,8 @@
 // ---------- HOME PAGE ---------- //
 import { motion } from "framer-motion";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { pagesUrl } from "../app/appConstants";
 import { homeSliderImages } from "../assets/datas/imagesData";
 import LogoArtAvenue from "../assets/icons/logo-art-avenue.svg";
 import LogoShells from "../assets/icons/logo-shells.svg";
@@ -15,11 +17,11 @@ import { ArrowLink } from "../components/links/ArrowLink";
 import { Slider } from "../components/Slider";
 
 export function HomePage(): React.JSX.Element {
-  const section4Ref = useRef<HTMLElement | null>(null);
+  const navigate = useNavigate();
 
   const handleDiscover = useCallback(() => {
-    section4Ref.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+    navigate(pagesUrl.BLOG_PAGE);
+  }, [navigate]);
 
   const handleSubscription = useCallback(() => {
     alert("Abonnement en cours.");
@@ -127,10 +129,7 @@ export function HomePage(): React.JSX.Element {
       </section>
 
       {/* section 4 */}
-      <section
-        ref={section4Ref}
-        className="flex flex-col-reverse items-center py-10 md:flex-row md:gap-6"
-      >
+      <section className="flex flex-col-reverse items-center py-10 md:flex-row md:gap-6">
         <motion.img
           src={Shapes}
           alt="formes roses et violettes"
@@ -155,7 +154,10 @@ export function HomePage(): React.JSX.Element {
             émergents, bonnes pratiques SEO, accessibilité, et bien plus encore.
             Ne manquez aucune actualité du digital !
           </p>
-          <ArrowLink label="Lire les articles récents" path="#" />
+          <ArrowLink
+            label="Lire les articles récents"
+            path={pagesUrl.BLOG_PAGE}
+          />
         </div>
       </section>
     </>

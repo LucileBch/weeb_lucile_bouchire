@@ -36,6 +36,7 @@ export function MobileNavBar({
               path={pagesUrl.CONTACT_PAGE}
               onClick={onClose}
             />
+            <NavLink label="Blog" path={pagesUrl.BLOG_PAGE} onClick={onClose} />
             <NavLink
               label="Connexion"
               path={pagesUrl.LOGIN_PAGE}
