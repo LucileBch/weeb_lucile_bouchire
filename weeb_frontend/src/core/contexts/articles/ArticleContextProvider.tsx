@@ -10,6 +10,8 @@ import { endpoints } from "../../api/endpoints";
 
 import type { ArticleDto } from "../../dtos/ArticleDto";
 import { useArticle } from "../../hooks/useArticle";
+import { formatServerError } from "../../utils/errorHandler";
+import { useErrorSnackbarContext } from "../error/ErrorSnackbarContext";
 import { ArticleContext } from "./ArticleContext";
 
 export function ArticleContextProvider({
@@ -17,21 +19,24 @@ export function ArticleContextProvider({
 }: Readonly<PropsWithChildren>) {
   const { getAllArticles } = useArticle();
 
+  const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
+
   const [articleList, setArticleList] = useState<ArticleDto[]>([]);
   const [isArticleListLoading, setIsArticleListLoading] =
     useState<boolean>(true);
 
   const fetchArticleList = useCallback(async (): Promise<void> => {
     try {
-      //   setIsArticleListLoading(true); // Début du chargement
       const response = await getAllArticles(endpoints.getArticles);
       setArticleList(response);
     } catch (error) {
-      console.error("Erreur lors de la récupération des articles", error);
+      const errorMessage = formatServerError(error);
+      setErrorMessage(errorMessage);
+      setIsErrorSnackbarOpen(true);
     } finally {
       setIsArticleListLoading(false);
     }
-  }, [getAllArticles]);
+  }, [getAllArticles, setErrorMessage, setIsErrorSnackbarOpen]);
 
   useEffect(() => {
     fetchArticleList();

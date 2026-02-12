@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('reviews.urls')),
     path('api/', include('users.urls')),
+    path('api/', include('articles.urls')),
 ]
 
 # if dev mode, bridge for articles' images
