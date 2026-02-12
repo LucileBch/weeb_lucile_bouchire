@@ -1,4 +1,4 @@
-// ---------- REVIEW CONTEXT PROVIDER ---------- //
+// ---------- ARTICLE CONTEXT PROVIDER ---------- //
 import {
   useCallback,
   useEffect,

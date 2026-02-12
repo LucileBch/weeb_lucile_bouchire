@@ -6,3 +6,11 @@ export const handleNavigation = (navigate: NavigateFunction, path: string) => {
     navigate(path);
   }, 2000);
 };
+
+export const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};

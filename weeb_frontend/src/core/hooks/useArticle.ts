@@ -1,8 +1,8 @@
+// ---------- ARTICLE HOOK ---------- //
 import { useCallback } from "react";
 import { api } from "../api/axiosInstance";
 import type { ArticleDto } from "../dtos/ArticleDto";
 
-// ---------- ARTICLE HOOK ---------- //
 interface ArticleHook {
   getAllArticles: (url: string) => Promise<ArticleDto[]>;
 }

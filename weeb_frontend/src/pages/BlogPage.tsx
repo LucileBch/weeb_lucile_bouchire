@@ -1,8 +1,8 @@
 // ---------- BLOG PAGE ---------- //
+import { ArticleCard } from "../components/articles/ArticleCard";
+import { EmptyArticlePlaceholder } from "../components/articles/EmptyArticlePlaceholder";
+import { CircularProgress } from "../components/CircularProgress";
 import { useArticleContext } from "../core/contexts/articles/ArticleContext";
-// create circular progress
-// create Article Card
-// create Empty space
 
 export function BlogPage(): React.JSX.Element {
   const { isArticleListLoading, articleList } = useArticleContext();
@@ -12,27 +12,15 @@ export function BlogPage(): React.JSX.Element {
       <h1 className="text-[var(--color-purple-text)]">Articles</h1>
 
       {isArticleListLoading ? (
-        <p>chargement...</p>
+        <CircularProgress color={"purple"} />
       ) : articleList.length > 0 ? (
-        articleList.map((article) => {
-          return (
-            <div key={article.id}>
-              <p>{article.title}</p>
-              {article.image && (
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="h-auto w-full max-w-md rounded-lg object-cover"
-                />
-              )}
-              <p>
-                {article.author.first_name} {article.author.last_name}
-              </p>
-            </div>
-          );
-        })
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+          {articleList.map((article) => {
+            return <ArticleCard key={article.id} article={article} />;
+          })}
+        </div>
       ) : (
-        <p> Aucun article à afficher</p>
+        <EmptyArticlePlaceholder />
       )}
     </div>
   );

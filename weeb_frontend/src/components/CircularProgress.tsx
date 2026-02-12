@@ -1,3 +1,4 @@
+// ---------- CIRCULAR PROGRESS COMPONENT ---------- //
 import type React from "react";
 
 interface Iprops {
