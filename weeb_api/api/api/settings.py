@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # ===== dependencies =====
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
 
     # ===== apps =====
@@ -65,6 +66,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# ===== JWT =====
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # ===== CORS =====
 # origins
