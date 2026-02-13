@@ -5,6 +5,7 @@ import type { ArticleDto } from "../dtos/ArticleDto";
 
 interface ArticleHook {
   getAllArticles: (url: string) => Promise<ArticleDto[]>;
+  getArticleById: (url: string, id: string) => Promise<ArticleDto>;
 }
 
 export function useArticle(): ArticleHook {
@@ -16,5 +17,13 @@ export function useArticle(): ArticleHook {
     [],
   );
 
-  return { getAllArticles };
+  const getArticleById = useCallback(
+    async (url: string, id: string): Promise<ArticleDto> => {
+      const response = await api.get<ArticleDto>(`${url}${id}/`);
+      return response.data;
+    },
+    [],
+  );
+
+  return { getAllArticles, getArticleById };
 }

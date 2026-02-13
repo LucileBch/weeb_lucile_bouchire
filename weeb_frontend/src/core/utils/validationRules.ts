@@ -1,3 +1,4 @@
+// ---------- VALIDATION RULES ---------- //
 /** Check name validity */
 export function validateName(
   name: string,

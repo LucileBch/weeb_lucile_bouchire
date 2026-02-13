@@ -5,6 +5,7 @@ export const pagesUrl = {
   ABOUT_PAGE: "/about",
   CONTACT_PAGE: "/contact",
   BLOG_PAGE: "/articles",
+  ARTICLE_PAGE: "/articles/:id",
   SIGN_UP_PAGE: "/signup",
   LOGIN_PAGE: "/login",
   FORGOT_PASSWORD_PAGE: "/forgot-password",

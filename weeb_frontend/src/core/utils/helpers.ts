@@ -14,3 +14,16 @@ export const formatDate = (dateString: string) => {
     year: "numeric",
   });
 };
+
+export const resolveUrl = (
+  url: string,
+  params: Record<string, string | number>,
+): string => {
+  let resolvedUrl = url;
+
+  Object.entries(params).forEach(([key, value]) => {
+    resolvedUrl = resolvedUrl.replace(`:${key}`, value.toString());
+  });
+
+  return resolvedUrl;
+};

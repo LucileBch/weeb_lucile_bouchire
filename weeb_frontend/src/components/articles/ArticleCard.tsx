@@ -1,6 +1,10 @@
 // ---------- ARTICLE CARD COMPONENT ---------- //
+import { useNavigate } from "react-router-dom";
+import { pagesUrl } from "../../app/appConstants";
 import NoImage from "../../assets/images/no-image-placeholder.webp";
 import type { ArticleDto } from "../../core/dtos/ArticleDto";
+import { resolveUrl } from "../../core/utils/helpers";
+import { Avatar } from "../badges/Avatar";
 import { DateBadge } from "../badges/DateBadge";
 
 interface IProps {
@@ -8,22 +12,23 @@ interface IProps {
 }
 
 export function ArticleCard({ article }: Readonly<IProps>): React.JSX.Element {
+  const navigate = useNavigate();
+
+  const handleNavigation = () => {
+    navigate(resolveUrl(pagesUrl.ARTICLE_PAGE, { id: article.id }));
+  };
+
   return (
-    <article className="group hover:border-purple-text/50 flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:shadow-[0_0_20px_rgba(192,132,252,0.15)]">
+    <article
+      onClick={handleNavigation}
+      className="group hover:border-purple-text/50 flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(192,132,252,0.15)]"
+    >
       <div className="relative aspect-video w-full overflow-hidden">
-        {article.image ? (
-          <img
-            src={article.image}
-            alt={article.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <img
-            src={NoImage}
-            alt="pas d'image"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
+        <img
+          src={article.image ?? NoImage}
+          alt={article.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
 
         <DateBadge
           date={article.created_at}
@@ -41,10 +46,10 @@ export function ArticleCard({ article }: Readonly<IProps>): React.JSX.Element {
         </p>
 
         <div className="mt-auto flex items-center gap-3 border-t border-white/10 pt-4">
-          <div className="bg-purple-bg flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white uppercase">
-            {article.author.first_name[0]}
-            {article.author.last_name[0]}
-          </div>
+          <Avatar
+            firstName={article.author.first_name}
+            lastName={article.author.last_name}
+          />
           <div className="flex flex-col">
             <h4 className="text-purple-text m-0 leading-none lowercase italic">
               @{article.author.first_name}

@@ -17,13 +17,21 @@ import { ArticleContext } from "./ArticleContext";
 export function ArticleContextProvider({
   children,
 }: Readonly<PropsWithChildren>) {
-  const { getAllArticles } = useArticle();
+  const { getAllArticles, getArticleById } = useArticle();
 
   const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
 
+  // article list
   const [articleList, setArticleList] = useState<ArticleDto[]>([]);
   const [isArticleListLoading, setIsArticleListLoading] =
     useState<boolean>(true);
+
+  // article by Id
+  const [selectedArticle, setSelectedArticle] = useState<
+    ArticleDto | undefined
+  >(undefined);
+  const [isSelectedArticleLoading, setIsSelectedArticleLoading] =
+    useState<boolean>(false);
 
   const fetchArticleList = useCallback(async (): Promise<void> => {
     try {
@@ -42,9 +50,38 @@ export function ArticleContextProvider({
     fetchArticleList();
   }, [fetchArticleList]);
 
+  const fetchArticleById = useCallback(
+    async (articleId: string): Promise<void> => {
+      try {
+        setIsSelectedArticleLoading(true);
+        const response = await getArticleById(endpoints.getArticles, articleId);
+        setSelectedArticle(response);
+      } catch (error) {
+        const errorMessage = formatServerError(error);
+        setErrorMessage(errorMessage);
+        setIsErrorSnackbarOpen(true);
+      } finally {
+        setIsSelectedArticleLoading(false);
+      }
+    },
+    [getArticleById, setErrorMessage, setIsErrorSnackbarOpen],
+  );
+
   const articleStore = useMemo(
-    () => ({ articleList, isArticleListLoading }),
-    [articleList, isArticleListLoading],
+    () => ({
+      articleList,
+      isArticleListLoading,
+      selectedArticle,
+      isSelectedArticleLoading,
+      fetchArticleById,
+    }),
+    [
+      articleList,
+      isArticleListLoading,
+      selectedArticle,
+      isSelectedArticleLoading,
+      fetchArticleById,
+    ],
   );
 
   return (
