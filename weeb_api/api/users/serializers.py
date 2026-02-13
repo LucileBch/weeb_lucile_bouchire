@@ -1,7 +1,7 @@
 import re
 from rest_framework import serializers
 from .models import CustomUser
-from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -68,6 +68,30 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+        user = CustomUser.objects.filter(email=email).first()
+
+        if user:
+            # 2. check if account is_active
+            if not user.is_active:
+                raise serializers.ValidationError({
+                    "detail": "Votre compte est en attente de validation par l'administrateur."
+                })
+            
+            # 3. check password
+            user_authenticated = authenticate(email=email, password=password)
+            if not user_authenticated:
+                raise serializers.ValidationError({
+                    "detail": "Email ou mot de passe incorrect."
+                })
+        else:
+            # 4. user does not exist
+            raise serializers.ValidationError({
+                "detail": "Aucun compte trouvé avec cet email."
+            })
+        
+        # 
         data = super().validate(attrs)
         
         # data for LocalStorage
