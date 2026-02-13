@@ -89,13 +89,17 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SAMESITE': 'Lax',
 }
 
+SESSION_COOKIE_HTTPONLY = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # ===== CORS =====
+# needed for authentication infos send by frontend
+CORS_ALLOW_CREDENTIALS = True 
 # origins
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # Frontend dev
 ]
-# needed for authentication infos send by frontend
-CORS_ALLOW_CREDENTIALS = True 
+
 # authorized headers
 CORS_ALLOW_HEADERS = [
     'accept',

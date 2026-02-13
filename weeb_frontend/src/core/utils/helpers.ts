@@ -27,3 +27,23 @@ export const resolveUrl = (
 
   return resolvedUrl;
 };
+
+export const getUserFromLocalStorage = <T>(key: string): T | undefined => {
+  const saved = localStorage.getItem(key);
+  if (!saved) return undefined;
+
+  try {
+    return JSON.parse(saved) as T;
+  } catch (error) {
+    console.error(`Erreur de parsing LocalStorage pour la clé ${key}:`, error);
+    return undefined;
+  }
+};
+
+export const addInLocalStorage = (key: string, value: unknown): void => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
+export const removeFromLocalStorage = (key: string): void => {
+  localStorage.removeItem(key);
+};

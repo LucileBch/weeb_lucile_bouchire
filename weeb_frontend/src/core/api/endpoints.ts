@@ -8,4 +8,5 @@ export const endpoints = {
 
   // auth
   signup: "/auth/signup/",
+  login: "/auth/login/",
 };
