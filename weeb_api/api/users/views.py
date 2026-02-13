@@ -1,8 +1,9 @@
+import os
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
 from .models import CustomUser
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -21,3 +22,86 @@ class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             {"message": "Compte créé. En attente de validation par l'administrateur."},
             status=status.HTTP_201_CREATED
         )
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    """
+    Custom Token ViewSet
+    Login with authentication controller
+    Add tokens in cookies & return user_data
+    """
+    serializer_class = MyTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        
+        if response.status_code == 200:
+            access_token = response.data.get('access')
+            refresh_token = response.data.get('refresh')
+
+            response.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=True,
+                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
+                samesite='Lax',
+                path='/'
+            )
+
+            response.set_cookie(
+                key='refresh_token',
+                value=refresh_token,
+                httponly=True,
+                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
+                samesite='Lax',
+                path='/api/auth/refresh-token/'
+            )
+
+            # Delete tokens from JSON response
+            # Not allowing JS to access these infos
+            del response.data['access']
+            del response.data['refresh']
+
+        return response
+
+class MyTokenRefreshView(TokenRefreshView):
+    """
+    Custom Refresh ViewSet
+    Use refresh_token cookie to create new access_token
+    """
+    def post(self, request, *args, **kwargs):
+        # get refresh_token from cookie
+        refresh_token = request.COOKIES.get('refresh_token')
+        
+        if refresh_token:
+            request.data['refresh'] = refresh_token
+
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == 200:
+            access_token = response.data.get('access')
+
+            response.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=True,
+                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
+                samesite='Lax',
+                path='/'
+            )
+            
+            # Si la rotation est activée, on met aussi à jour le refresh cookie
+            new_refresh = response.data.get('refresh')
+            if new_refresh:
+                response.set_cookie(
+                    key='refresh_token',
+                    value=new_refresh,
+                    httponly=True,
+                    secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
+                    samesite='Lax',
+                    path='/api/auth/refresh-token/'
+                )  
+                del response.data['refresh']
+
+            del response.data['access']
+
+        return response

@@ -1,29 +1,34 @@
 // ---------- LOGIN PAGE ---------- //
 import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { ArrowLink } from "../../components/links/ArrowLink";
 import { NavLink } from "../../components/links/NavLink";
+import { useAuthContext } from "../../core/contexts/auth/AuthContext";
 import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserLoginDto } from "../../core/dtos/user/UserLoginDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
+import { handleNavigation } from "../../core/utils/helpers";
 import {
   validateEmail,
   validatePassword,
 } from "../../core/utils/validationRules";
 
 export function LoginPage(): React.JSX.Element {
+  const navigate = useNavigate();
+
   const { setSuccessMessage, setIsSuccessSnackbarOpen } =
     useSuccessSnarckbarContext();
+  const { loginUser } = useAuthContext();
 
   const initialFormValues: FormValues<UserLoginDto> = {
     email: "",
     password: "",
   };
 
-  // TODO: backend control for rules
   const validate = (formData: FormValues<UserLoginDto>) => {
     const errors: Record<keyof UserLoginDto, string | undefined> = {} as Record<
       keyof UserLoginDto,
@@ -38,11 +43,14 @@ export function LoginPage(): React.JSX.Element {
 
   const onSubmit = useCallback(
     async (formData: FormValues<UserLoginDto>) => {
-      setSuccessMessage(`Bon retour parmis nous ${formData.email}.`);
+      const user = await loginUser(formData);
+
+      setSuccessMessage(`Bon retour parmis nous ${user.first_name}.`);
       setIsSuccessSnackbarOpen(true);
-      // TODO: navigate to authenticated home page
+
+      handleNavigation(navigate, pagesUrl.BLOG_PAGE);
     },
-    [setIsSuccessSnackbarOpen, setSuccessMessage],
+    [loginUser, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const { formData, formErrors, isSubmitting, handleChange, handleSubmit } =

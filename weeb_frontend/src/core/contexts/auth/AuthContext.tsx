@@ -1,9 +1,15 @@
 // ---------- AUTH CONTEXT ---------- //
 import React, { useContext } from "react";
 import type { UserCreationDto } from "../../dtos/user/UserCreationDto";
+import type { UserDto } from "../../dtos/user/UserDto";
+import type { UserLoginDto } from "../../dtos/user/UserLoginDto";
 
 export interface AuthStore {
+  actualUser: UserDto | undefined;
+  isAuthenticated: boolean;
+
   createUser(userCreationDto: UserCreationDto): Promise<void>;
+  loginUser(userLoginDto: UserLoginDto): Promise<UserDto>;
 }
 
 export const AuthContext = React.createContext<AuthStore | undefined>(

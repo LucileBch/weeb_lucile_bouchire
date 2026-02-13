@@ -1,5 +1,4 @@
-// might be serializer with Django DRF
-// TBC in the next step
+// ---------- USER LOGIN DTO ---------- //
 export interface UserLoginDto {
   email: string;
   password: string;

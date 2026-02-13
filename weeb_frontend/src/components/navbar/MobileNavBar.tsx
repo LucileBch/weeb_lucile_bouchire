@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { pagesUrl } from "../../app/appConstants";
+import { useAuthContext } from "../../core/contexts/auth/AuthContext";
 import { NavLink } from "../links/NavLink";
 
 interface IProps {
@@ -12,6 +13,8 @@ export function MobileNavBar({
   isMenuOpen,
   onClose,
 }: Readonly<IProps>): React.JSX.Element {
+  const { isAuthenticated } = useAuthContext();
+
   return (
     <AnimatePresence>
       {isMenuOpen && (
@@ -37,16 +40,28 @@ export function MobileNavBar({
               onClick={onClose}
             />
             <NavLink label="Blog" path={pagesUrl.BLOG_PAGE} onClick={onClose} />
-            <NavLink
-              label="Connexion"
-              path={pagesUrl.LOGIN_PAGE}
-              onClick={onClose}
-            />
-            <NavLink
-              label="Inscription"
-              path={pagesUrl.SIGN_UP_PAGE}
-              onClick={onClose}
-            />
+
+            {isAuthenticated ? (
+              // TODO: temporary => should be ACTION LINK. Will be implemented with LOGOUT endpoint
+              <NavLink
+                label="Déconnexion"
+                path={pagesUrl.LOGIN_PAGE}
+                onClick={onClose}
+              />
+            ) : (
+              <>
+                <NavLink
+                  label="Connexion"
+                  path={pagesUrl.LOGIN_PAGE}
+                  onClick={onClose}
+                />
+                <NavLink
+                  label="Inscription"
+                  path={pagesUrl.SIGN_UP_PAGE}
+                  onClick={onClose}
+                />
+              </>
+            )}
           </div>
         </motion.div>
       )}
