@@ -5,6 +5,10 @@ import type { ArticleDto } from "../../dtos/ArticleDto";
 export interface ArticleStore {
   articleList: ArticleDto[];
   isArticleListLoading: boolean;
+  selectedArticle: ArticleDto | undefined;
+  isSelectedArticleLoading: boolean;
+
+  fetchArticleById(articleId: string): Promise<void>;
 }
 
 export const ArticleContext = React.createContext<ArticleStore | undefined>(
