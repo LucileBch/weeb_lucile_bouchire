@@ -1,8 +1,9 @@
+import os
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from .models import CustomUser
 from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -41,7 +42,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
                 key='access_token',
                 value=access_token,
                 httponly=True,
-                secure=False, # À mettre à True en prod (HTTPS)
+                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
                 samesite='Lax',
                 path='/'
             )
@@ -50,14 +51,57 @@ class MyTokenObtainPairView(TokenObtainPairView):
                 key='refresh_token',
                 value=refresh_token,
                 httponly=True,
-                secure=False, # À mettre à True en prod (HTTPS)
+                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
                 samesite='Lax',
-                path='/api/token/refresh/'
+                path='/api/auth/refresh-token/'
             )
 
             # Delete tokens from JSON response
             # Not allowing JS to access these infos
             del response.data['access']
             del response.data['refresh']
+
+        return response
+
+class MyTokenRefreshView(TokenRefreshView):
+    """
+    Custom Refresh ViewSet
+    Use refresh_token cookie to create new access_token
+    """
+    def post(self, request, *args, **kwargs):
+        # get refresh_token from cookie
+        refresh_token = request.COOKIES.get('refresh_token')
+        
+        if refresh_token:
+            request.data['refresh'] = refresh_token
+
+        response = super().post(request, *args, **kwargs)
+
+        if response.status_code == 200:
+            access_token = response.data.get('access')
+
+            response.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=True,
+                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
+                samesite='Lax',
+                path='/'
+            )
+            
+            # Si la rotation est activée, on met aussi à jour le refresh cookie
+            new_refresh = response.data.get('refresh')
+            if new_refresh:
+                response.set_cookie(
+                    key='refresh_token',
+                    value=new_refresh,
+                    httponly=True,
+                    secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
+                    samesite='Lax',
+                    path='/api/auth/refresh-token/'
+                )  
+                del response.data['refresh']
+
+            del response.data['access']
 
         return response
