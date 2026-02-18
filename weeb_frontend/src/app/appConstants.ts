@@ -10,6 +10,9 @@ export const pagesUrl = {
   LOGIN_PAGE: "/login",
   FORGOT_PASSWORD_PAGE: "/forgot-password",
 
+  // authenticated url
+  ARTICLE_CREATION_PAGE: "/articles/new",
+
   // error url
   ERROR_404: "*",
 };

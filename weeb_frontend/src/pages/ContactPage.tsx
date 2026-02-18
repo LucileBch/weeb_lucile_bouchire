@@ -1,6 +1,7 @@
 // ---------- CONTACT PAGE ---------- //
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { pagesUrl } from "../app/appConstants";
 import { SubmitButton } from "../components/buttons/SubmitButton";
 import { TextAreaInput } from "../components/inputs/TextAreaInput";
 import { TextInput } from "../components/inputs/TextInput";
@@ -53,7 +54,7 @@ export function ContactPage(): React.JSX.Element {
         `${formData.first_name} ${formData.last_name} merci pour votre avis. Nous reviendrons vers vous rapidement.`,
       );
       setIsSuccessSnackbarOpen(true);
-      handleNavigation(navigate, "/");
+      handleNavigation(navigate, pagesUrl.HOME_PAGE);
     },
     [createNewReview, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );

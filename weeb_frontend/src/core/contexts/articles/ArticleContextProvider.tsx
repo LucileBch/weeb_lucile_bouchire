@@ -8,7 +8,8 @@ import {
 } from "react";
 import { endpoints } from "../../api/endpoints";
 
-import type { ArticleDto } from "../../dtos/ArticleDto";
+import type { ArticleCreationDto } from "../../dtos/articles/ArticleCreationDto";
+import type { ArticleDto } from "../../dtos/articles/ArticleDto";
 import { useArticle } from "../../hooks/useArticle";
 import { formatServerError } from "../../utils/errorHandler";
 import { useErrorSnackbarContext } from "../error/ErrorSnackbarContext";
@@ -17,7 +18,7 @@ import { ArticleContext } from "./ArticleContext";
 export function ArticleContextProvider({
   children,
 }: Readonly<PropsWithChildren>) {
-  const { getAllArticles, getArticleById } = useArticle();
+  const { getAllArticles, getArticleById, postArticle } = useArticle();
 
   const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
 
@@ -35,7 +36,7 @@ export function ArticleContextProvider({
 
   const fetchArticleList = useCallback(async (): Promise<void> => {
     try {
-      const response = await getAllArticles(endpoints.getArticles);
+      const response = await getAllArticles(endpoints.getOrPostArticles);
       setArticleList(response);
     } catch (error) {
       const errorMessage = formatServerError(error);
@@ -54,7 +55,10 @@ export function ArticleContextProvider({
     async (articleId: string): Promise<void> => {
       try {
         setIsSelectedArticleLoading(true);
-        const response = await getArticleById(endpoints.getArticles, articleId);
+        const response = await getArticleById(
+          endpoints.getOrPostArticles,
+          articleId,
+        );
         setSelectedArticle(response);
       } catch (error) {
         const errorMessage = formatServerError(error);
@@ -67,6 +71,19 @@ export function ArticleContextProvider({
     [getArticleById, setErrorMessage, setIsErrorSnackbarOpen],
   );
 
+  const createNewArticle = useCallback(
+    async (articleCreationDto: ArticleCreationDto): Promise<ArticleDto> => {
+      const payload = {
+        title: articleCreationDto.title,
+        content: articleCreationDto.content,
+        image: articleCreationDto.image,
+      };
+
+      return await postArticle(endpoints.getOrPostArticles, payload);
+    },
+    [postArticle],
+  );
+
   const articleStore = useMemo(
     () => ({
       articleList,
@@ -74,6 +91,7 @@ export function ArticleContextProvider({
       selectedArticle,
       isSelectedArticleLoading,
       fetchArticleById,
+      createNewArticle,
     }),
     [
       articleList,
@@ -81,6 +99,7 @@ export function ArticleContextProvider({
       selectedArticle,
       isSelectedArticleLoading,
       fetchArticleById,
+      createNewArticle,
     ],
   );
 

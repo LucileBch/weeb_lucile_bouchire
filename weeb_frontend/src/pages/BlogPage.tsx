@@ -1,6 +1,8 @@
 // ---------- BLOG PAGE ---------- //
+import { pagesUrl } from "../app/appConstants";
 import { ArticleCard } from "../components/articles/ArticleCard";
 import { EmptyArticlePlaceholder } from "../components/articles/EmptyArticlePlaceholder";
+import { NavigationButton } from "../components/buttons/NavigationButton";
 import { CircularProgress } from "../components/CircularProgress";
 import { useArticleContext } from "../core/contexts/articles/ArticleContext";
 import { useAuthContext } from "../core/contexts/auth/AuthContext";
@@ -22,7 +24,12 @@ export function BlogPage(): React.JSX.Element {
           })}
 
           {/* TODO: ajouter bouton ici if authenticated + renvoie page création article */}
-          {isAuthenticated && <p>ajouter un article</p>}
+          {isAuthenticated && (
+            <NavigationButton
+              label="Ajouter un article"
+              path={pagesUrl.ARTICLE_CREATION_PAGE}
+            />
+          )}
         </div>
       ) : (
         <EmptyArticlePlaceholder />

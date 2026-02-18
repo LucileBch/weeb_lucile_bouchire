@@ -1,6 +1,7 @@
 // ---------- APP ROUTER ---------- //
 import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
+import { ArticleCreationPage } from "../../pages/(authenticated)/ArticleCreationPage";
 import { ForgotPasswordPage } from "../../pages/(authentication)/ForgotPasswordPage";
 import { LoginPage } from "../../pages/(authentication)/LoginPage";
 import { SignUpPage } from "../../pages/(authentication)/SignUpPage";
@@ -35,16 +36,18 @@ export const AppRouter = createBrowserRouter([
             path: pagesUrl.FORGOT_PASSWORD_PAGE,
             element: <ForgotPasswordPage />,
           },
-        ],
-      },
 
-      // --- PROTECTED ROUTES ---
-      // TODO:  profile page when connected, create article page
-      {
-        element: <ProtectedRoute />,
-        children: [
-          { path: pagesUrl.BLOG_PAGE, element: <BlogPage /> },
-          { path: pagesUrl.ARTICLE_PAGE, element: <ArticlePage /> },
+          // --- PROTECTED ROUTES ---
+          // TODO:  profile page when connected
+          {
+            element: <ProtectedRoute />,
+            children: [
+              {
+                path: pagesUrl.ARTICLE_CREATION_PAGE,
+                element: <ArticleCreationPage />,
+              },
+            ],
+          },
         ],
       },
     ],

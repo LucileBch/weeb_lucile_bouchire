@@ -1,6 +1,7 @@
 // ---------- ARTICLE CONTEXT ---------- //
 import React, { useContext } from "react";
-import type { ArticleDto } from "../../dtos/ArticleDto";
+import type { ArticleCreationDto } from "../../dtos/articles/ArticleCreationDto";
+import type { ArticleDto } from "../../dtos/articles/ArticleDto";
 
 export interface ArticleStore {
   articleList: ArticleDto[];
@@ -9,6 +10,7 @@ export interface ArticleStore {
   isSelectedArticleLoading: boolean;
 
   fetchArticleById(articleId: string): Promise<void>;
+  createNewArticle(articleCreationDto: ArticleCreationDto): Promise<ArticleDto>;
 }
 
 export const ArticleContext = React.createContext<ArticleStore | undefined>(
