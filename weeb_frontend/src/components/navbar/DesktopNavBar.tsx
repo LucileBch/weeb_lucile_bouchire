@@ -1,5 +1,5 @@
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { useAuthContext } from "../../core/contexts/auth/AuthContext";
@@ -10,19 +10,11 @@ import { NavLink } from "../links/NavLink";
 export function DesktopNavBar(): React.JSX.Element {
   const navigate = useNavigate();
 
-  const { isAuthenticated, logoutUser } = useAuthContext();
-
-  const [isActionInProgress, setIsActionInProgress] = useState<boolean>(false);
+  const { isAuthenticated, logoutUser, isLoggingOut } = useAuthContext();
 
   const handleLogout = useCallback(async () => {
-    setIsActionInProgress(true);
-
-    try {
-      await logoutUser();
-      navigate(pagesUrl.HOME_PAGE);
-    } finally {
-      setIsActionInProgress(false);
-    }
+    await logoutUser();
+    navigate(pagesUrl.HOME_PAGE);
   }, [logoutUser, navigate]);
 
   return (
@@ -38,7 +30,7 @@ export function DesktopNavBar(): React.JSX.Element {
           <ActionButton
             label="Déconnexion"
             onClick={handleLogout}
-            isActionInProgress={isActionInProgress}
+            isActionInProgress={isLoggingOut}
           />
         ) : (
           <>

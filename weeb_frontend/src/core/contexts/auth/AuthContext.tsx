@@ -7,6 +7,7 @@ import type { UserLoginDto } from "../../dtos/user/UserLoginDto";
 export interface AuthStore {
   actualUser: UserDto | undefined;
   isAuthenticated: boolean;
+  isLoggingOut: boolean;
 
   createUser(userCreationDto: UserCreationDto): Promise<void>;
   loginUser(userLoginDto: UserLoginDto): Promise<UserDto>;

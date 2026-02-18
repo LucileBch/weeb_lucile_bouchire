@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { useAuthContext } from "../../core/contexts/auth/AuthContext";
+import { ActionLink } from "../links/ActionLink";
 import { NavLink } from "../links/NavLink";
 
 interface IProps {
@@ -13,7 +16,15 @@ export function MobileNavBar({
   isMenuOpen,
   onClose,
 }: Readonly<IProps>): React.JSX.Element {
-  const { isAuthenticated } = useAuthContext();
+  const navigate = useNavigate();
+
+  const { isAuthenticated, logoutUser, isLoggingOut } = useAuthContext();
+
+  const handleLogout = useCallback(async () => {
+    await logoutUser();
+    onClose();
+    navigate(pagesUrl.HOME_PAGE);
+  }, [logoutUser, navigate, onClose]);
 
   return (
     <AnimatePresence>
@@ -42,11 +53,10 @@ export function MobileNavBar({
             <NavLink label="Blog" path={pagesUrl.BLOG_PAGE} onClick={onClose} />
 
             {isAuthenticated ? (
-              // TODO: temporary => should be ACTION LINK. Will be implemented with LOGOUT endpoint
-              <NavLink
+              <ActionLink
                 label="Déconnexion"
-                path={pagesUrl.LOGIN_PAGE}
-                onClick={onClose}
+                isActionInProgress={isLoggingOut}
+                onClick={handleLogout}
               />
             ) : (
               <>

@@ -27,6 +27,7 @@ export function AuthContextProvider({
   const [actualUser, setActualUser] = useState<UserDto | undefined>(() =>
     getUserFromLocalStorage("user"),
   );
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const isAuthenticated = useMemo(() => actualUser !== undefined, [actualUser]);
 
@@ -62,6 +63,8 @@ export function AuthContextProvider({
   );
 
   const logoutUser = useCallback(async () => {
+    setIsLoggingOut(true);
+
     try {
       await logout(endpoints.logout);
 
@@ -74,6 +77,7 @@ export function AuthContextProvider({
     } finally {
       setActualUser(undefined);
       removeFromLocalStorage("user");
+      setIsLoggingOut(false);
     }
   }, [
     logout,
@@ -84,8 +88,22 @@ export function AuthContextProvider({
   ]);
 
   const authStore: AuthStore = useMemo(
-    () => ({ createUser, loginUser, logoutUser, actualUser, isAuthenticated }),
-    [createUser, loginUser, logoutUser, actualUser, isAuthenticated],
+    () => ({
+      createUser,
+      loginUser,
+      logoutUser,
+      actualUser,
+      isAuthenticated,
+      isLoggingOut,
+    }),
+    [
+      createUser,
+      loginUser,
+      logoutUser,
+      actualUser,
+      isAuthenticated,
+      isLoggingOut,
+    ],
   );
 
   return (
