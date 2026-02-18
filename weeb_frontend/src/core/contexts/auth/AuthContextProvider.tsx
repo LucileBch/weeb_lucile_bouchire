@@ -1,5 +1,5 @@
 // ---------- AUTH CONTEXT PROVIDER ---------- //
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { endpoints } from "../../api/endpoints";
 import type { UserCreationDto } from "../../dtos/user/UserCreationDto";
 import type { UserDto } from "../../dtos/user/UserDto";
@@ -86,6 +86,12 @@ export function AuthContextProvider({
     setIsSuccessSnackbarOpen,
     setSuccessMessage,
   ]);
+
+  useEffect(() => {
+    const handleForceLogout = () => logoutUser();
+    window.addEventListener("force-logout", handleForceLogout);
+    return () => window.removeEventListener("force-logout", handleForceLogout);
+  }, [logoutUser]);
 
   const authStore: AuthStore = useMemo(
     () => ({
