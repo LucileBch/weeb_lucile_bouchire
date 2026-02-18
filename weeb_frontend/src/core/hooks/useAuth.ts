@@ -12,6 +12,7 @@ interface LoginResponse {
 interface AuthHook {
   postUser: (url: string, payload: UserCreationDto) => Promise<void>;
   login: (url: string, payload: UserLoginDto) => Promise<LoginResponse>;
+  logout: (url: string) => Promise<void>;
 }
 
 export function useAuth(): AuthHook {
@@ -30,8 +31,13 @@ export function useAuth(): AuthHook {
     [],
   );
 
+  const logout = useCallback(async (url: string): Promise<void> => {
+    await api.post(url);
+  }, []);
+
   return {
     postUser,
     login,
+    logout,
   };
 }

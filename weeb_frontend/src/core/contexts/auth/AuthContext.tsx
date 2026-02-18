@@ -10,6 +10,7 @@ export interface AuthStore {
 
   createUser(userCreationDto: UserCreationDto): Promise<void>;
   loginUser(userLoginDto: UserLoginDto): Promise<UserDto>;
+  logoutUser(): Promise<void>;
 }
 
 export const AuthContext = React.createContext<AuthStore | undefined>(

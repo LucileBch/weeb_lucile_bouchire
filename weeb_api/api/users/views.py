@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import CustomUser
 from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.views import APIView
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -89,7 +90,7 @@ class MyTokenRefreshView(TokenRefreshView):
                 path='/'
             )
             
-            # Si la rotation est activée, on met aussi à jour le refresh cookie
+            # If rotation in settings => update refresh cookie
             new_refresh = response.data.get('refresh')
             if new_refresh:
                 response.set_cookie(
@@ -103,5 +104,29 @@ class MyTokenRefreshView(TokenRefreshView):
                 del response.data['refresh']
 
             del response.data['access']
+
+        return response
+    
+class LogoutView(APIView):
+    """
+    Logout View
+    Logout user and clean tokens in cookies
+    """
+    def post(self, request):
+        response = Response(
+            {"message": "Déconnexion réussie"}, 
+            status=status.HTTP_200_OK
+        )
+        
+        # warning : path as to be exactly the same from login
+        response.delete_cookie(
+            'access_token', 
+            path='/'
+        )
+        
+        response.delete_cookie(
+            'refresh_token', 
+            path='/api/auth/refresh-token/'
+        )
 
         return response
