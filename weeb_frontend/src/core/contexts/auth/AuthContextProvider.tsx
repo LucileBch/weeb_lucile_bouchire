@@ -5,21 +5,29 @@ import type { UserCreationDto } from "../../dtos/user/UserCreationDto";
 import type { UserDto } from "../../dtos/user/UserDto";
 import type { UserLoginDto } from "../../dtos/user/UserLoginDto";
 import { useAuth } from "../../hooks/useAuth";
+import { formatServerError } from "../../utils/errorHandler";
 import {
   addInLocalStorage,
   getUserFromLocalStorage,
+  removeFromLocalStorage,
 } from "../../utils/helpers";
+import { useErrorSnackbarContext } from "../error/ErrorSnackbarContext";
+import { useSuccessSnarckbarContext } from "../success/SuccessSnackbarContext";
 import { AuthContext, type AuthStore } from "./AuthContext";
 
 export function AuthContextProvider({
   children,
 }: React.PropsWithChildren): React.JSX.Element {
-  // logout
-  const { postUser, login } = useAuth();
+  const { postUser, login, logout } = useAuth();
+
+  const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
+  const { setSuccessMessage, setIsSuccessSnackbarOpen } =
+    useSuccessSnarckbarContext();
 
   const [actualUser, setActualUser] = useState<UserDto | undefined>(() =>
     getUserFromLocalStorage("user"),
   );
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const isAuthenticated = useMemo(() => actualUser !== undefined, [actualUser]);
 
@@ -54,9 +62,48 @@ export function AuthContextProvider({
     [login],
   );
 
+  const logoutUser = useCallback(async () => {
+    setIsLoggingOut(true);
+
+    try {
+      await logout(endpoints.logout);
+
+      setSuccessMessage(`Déconnexion réussie.`);
+      setIsSuccessSnackbarOpen(true);
+    } catch (error) {
+      const serverMessage = formatServerError(error);
+      setErrorMessage(serverMessage);
+      setIsErrorSnackbarOpen(true);
+    } finally {
+      setActualUser(undefined);
+      removeFromLocalStorage("user");
+      setIsLoggingOut(false);
+    }
+  }, [
+    logout,
+    setErrorMessage,
+    setIsErrorSnackbarOpen,
+    setIsSuccessSnackbarOpen,
+    setSuccessMessage,
+  ]);
+
   const authStore: AuthStore = useMemo(
-    () => ({ createUser, loginUser, actualUser, isAuthenticated }),
-    [createUser, loginUser, actualUser, isAuthenticated],
+    () => ({
+      createUser,
+      loginUser,
+      logoutUser,
+      actualUser,
+      isAuthenticated,
+      isLoggingOut,
+    }),
+    [
+      createUser,
+      loginUser,
+      logoutUser,
+      actualUser,
+      isAuthenticated,
+      isLoggingOut,
+    ],
   );
 
   return (

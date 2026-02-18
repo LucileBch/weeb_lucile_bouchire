@@ -1,3 +1,4 @@
+// ---------- ERROR SNACKBAR COMPONENT ---------- //
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { useEffect } from "react";

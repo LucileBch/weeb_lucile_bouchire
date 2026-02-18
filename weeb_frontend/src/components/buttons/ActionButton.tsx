@@ -1,14 +1,17 @@
-// ---------- OUTLINED BUTTON COMPONENT ---------- //
+// ---------- ACTION BUTTON COMPONENT ---------- //
 import { motion } from "framer-motion";
 import type React from "react";
+import { CircularProgress } from "../CircularProgress";
 
 interface IProps {
   label: string;
+  isActionInProgress: boolean;
   onClick(): void;
 }
 
-export function OutlinedButton({
+export function ActionButton({
   label,
+  isActionInProgress = false,
   onClick,
 }: Readonly<IProps>): React.JSX.Element {
   return (
@@ -23,10 +26,11 @@ export function OutlinedButton({
         duration: 0.3,
         ease: "easeInOut",
       }}
-      className="text-responsive inline-block cursor-pointer rounded-lg border-2 border-[var(--color-white)] px-2 py-1 transition-all duration-300 ease-in-out lg:px-3 lg:py-3"
       onClick={onClick}
+      disabled={isActionInProgress}
+      className={`basic-button ${isActionInProgress ? "cursor-default opacity-70" : ""}`}
     >
-      {label}
+      {isActionInProgress ? <CircularProgress color="purple" /> : label}
     </motion.button>
   );
 }
