@@ -1,13 +1,13 @@
 // ---------- CIRCULAR PROGRESS COMPONENT ---------- //
 import type React from "react";
 
-interface Iprops {
+interface IProps {
   color: string;
 }
 
 export function CircularProgress({
   color,
-}: Readonly<Iprops>): React.JSX.Element {
+}: Readonly<IProps>): React.JSX.Element {
   const borderColor =
     color === "white"
       ? "border-[var(--color-white)]"
