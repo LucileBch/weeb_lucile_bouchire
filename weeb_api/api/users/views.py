@@ -5,6 +5,7 @@ from .models import CustomUser
 from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -110,23 +111,29 @@ class MyTokenRefreshView(TokenRefreshView):
 class LogoutView(APIView):
     """
     Logout View
-    Logout user and clean tokens in cookies
+    Logout user, blacklist refresh token and clean cookies
     """
     def post(self, request):
+        # 1. get token from cookie
+        refresh_token = request.COOKIES.get('refresh_token')
+
+        if refresh_token:
+            try:
+                # 2. Blacklister refresh token in DB
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            except TokenError:
+                # ignore if already blacklisted
+                pass
+
+        # 3. Response
         response = Response(
             {"message": "Déconnexion réussie"}, 
             status=status.HTTP_200_OK
         )
         
-        # warning : path as to be exactly the same from login
-        response.delete_cookie(
-            'access_token', 
-            path='/'
-        )
-        
-        response.delete_cookie(
-            'refresh_token', 
-            path='/api/auth/refresh-token/'
-        )
+        # 4. clean cookies
+        response.delete_cookie('access_token', path='/')
+        response.delete_cookie('refresh_token', path='/api/auth/refresh-token/')
 
         return response

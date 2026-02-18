@@ -1,5 +1,6 @@
-import type React from "react";
+// ---------- BURGER BUTTON COMPONENT ---------- //
 import { Menu, X } from "lucide-react";
+import type React from "react";
 
 interface IProps {
   isMenuOpen: boolean;

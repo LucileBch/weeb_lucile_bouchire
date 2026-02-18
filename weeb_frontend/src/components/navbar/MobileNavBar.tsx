@@ -1,3 +1,4 @@
+// ---------- MOBILE NAVBAR COMPONENT ---------- //
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { useCallback } from "react";
