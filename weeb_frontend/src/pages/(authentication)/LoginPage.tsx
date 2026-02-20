@@ -11,7 +11,7 @@ import { useAuthContext } from "../../core/contexts/auth/AuthContext";
 import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserLoginDto } from "../../core/dtos/user/UserLoginDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
-import { handleNavigation } from "../../core/utils/helpers";
+import { handleNavigationWithTimeout } from "../../core/utils/helpers";
 import {
   validateEmail,
   validatePassword,
@@ -48,7 +48,7 @@ export function LoginPage(): React.JSX.Element {
       setSuccessMessage(`Bon retour parmis nous ${user.first_name}.`);
       setIsSuccessSnackbarOpen(true);
 
-      handleNavigation(navigate, pagesUrl.BLOG_PAGE);
+      handleNavigationWithTimeout(navigate, pagesUrl.BLOG_PAGE, 0);
     },
     [loginUser, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );

@@ -1,7 +1,10 @@
 // ---------- ARTICLE CREATION PAGE ---------- //
-import { useCallback } from "react";
+import { Trash2 } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
+import { IconButton } from "../../components/buttons/IconButton";
+import { OutlinedButton } from "../../components/buttons/OutlinedButton";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { TextAreaInput } from "../../components/inputs/TextAreaInput";
 import { TextInput } from "../../components/inputs/TextInput";
@@ -9,24 +12,30 @@ import { useArticleContext } from "../../core/contexts/articles/ArticleContext";
 import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { ArticleCreationDto } from "../../core/dtos/articles/ArticleCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
-import { handleNavigation, resolveUrl } from "../../core/utils/helpers";
+import {
+  handleNavigationWithTimeout,
+  resolveUrl,
+} from "../../core/utils/helpers";
 import {
   validateName,
   validateNotEmpty,
 } from "../../core/utils/validationRules";
 
-//TODO: add image input & section
 export function ArticleCreationPage(): React.JSX.Element {
   const navigate = useNavigate();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { setSuccessMessage, setIsSuccessSnackbarOpen } =
     useSuccessSnarckbarContext();
   const { createNewArticle } = useArticleContext();
 
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const initialFormValues: FormValues<ArticleCreationDto> = {
     title: "",
     content: "",
-    image: "",
+    image: null,
   };
 
   const validate = (formData: FormValues<ArticleCreationDto>) => {
@@ -49,13 +58,43 @@ export function ArticleCreationPage(): React.JSX.Element {
       const targetUrl = resolveUrl(pagesUrl.ARTICLE_PAGE, {
         id: newArticle.id,
       });
-      handleNavigation(navigate, targetUrl);
+      handleNavigationWithTimeout(navigate, targetUrl, 0);
     },
     [createNewArticle, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const { formData, formErrors, isSubmitting, handleChange, handleSubmit } =
     useForm({ initialFormValues, validate, onSubmit });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+
+    if (file) {
+      setPreviewUrl(URL.createObjectURL(file));
+
+      const manualEvent = {
+        target: {
+          name: "image",
+          value: file,
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+      handleChange(manualEvent);
+    }
+  };
+
+  const removeImage = () => {
+    setPreviewUrl(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    const emptyEvent = {
+      target: {
+        name: "image",
+        value: null,
+      },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+    handleChange(emptyEvent);
+  };
 
   return (
     <section className="flex flex-col items-center gap-10 py-10 text-center">
@@ -90,6 +129,68 @@ export function ArticleCreationPage(): React.JSX.Element {
             onChange={handleChange}
             error={formErrors.content}
           />
+        </div>
+
+        <div className="flex flex-col gap-4 text-left">
+          <label className="text-sm tracking-wider text-[var(--color-purple-text)]">
+            Image
+          </label>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
+          <div className="flex flex-col gap-6 rounded-xl border-3 border-dashed border-[var(--color-purple-text)]/30 bg-[var(--color-purple-bg)]/5 p-6 transition-all">
+            {/* LIGNE D'ACTION : Bouton + Nom du fichier + Poubelle */}
+            <div className="flex flex-wrap items-center gap-4">
+              <OutlinedButton
+                type="button"
+                label={
+                  formData.image ? "Changer d'image" : "Sélectionner une image"
+                }
+                onClick={() => fileInputRef.current?.click()}
+              />
+
+              {formData.image && (
+                <div className="flex flex-1 items-center overflow-hidden px-4 py-2">
+                  <span className="truncate text-sm text-gray-600 italic">
+                    {/* On affiche le nom du fichier contenu dans l'objet File */}
+                    {(formData.image as File).name}
+                  </span>
+
+                  <IconButton
+                    icon={Trash2}
+                    onClick={removeImage}
+                    title="Supprimer l'image"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* APERÇU : Visible uniquement si une image est sélectionnée */}
+            {previewUrl && (
+              <div className="flex justify-center border-t border-[var(--color-purple-text)]/10 pt-4">
+                <div className="group relative">
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="h-40 w-full max-w-xs rounded-lg border-2 border-[var(--color-purple-text)] object-cover shadow-md"
+                  />
+                </div>
+              </div>
+            )}
+
+            {!formData.image && (
+              <p className="text-center text-xs text-gray-400">
+                Aucun fichier (Formats : JPG, PNG, WEBP)
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="mt-4 flex justify-center">

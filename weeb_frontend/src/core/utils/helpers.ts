@@ -1,10 +1,14 @@
 // ---------- HELPERS ---------- //
 import type { NavigateFunction } from "react-router-dom";
 
-export const handleNavigation = (navigate: NavigateFunction, path: string) => {
+export const handleNavigationWithTimeout = (
+  navigate: NavigateFunction,
+  path: string,
+  delay: number = 2000,
+) => {
   setTimeout(() => {
     navigate(path);
-  }, 2000);
+  }, delay);
 };
 
 export const formatDate = (dateString: string) => {

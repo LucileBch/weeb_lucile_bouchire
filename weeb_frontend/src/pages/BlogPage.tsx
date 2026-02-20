@@ -12,9 +12,16 @@ export function BlogPage(): React.JSX.Element {
   const { isAuthenticated } = useAuthContext();
 
   return (
-    <div className="flex flex-col items-center gap-4 py-10 text-center md:gap-8">
-      <h1 className="text-[var(--color-purple-text)]">Articles</h1>
-
+    <div className="flex flex-col gap-8 py-10">
+      <div className="flex items-center justify-between border-b border-[var(--color-purple-text)]/10 pb-6">
+        <h1 className="text-[var(--color-purple-text)]">Articles</h1>
+        {isAuthenticated && (
+          <NavigationButton
+            label="Ajouter un article"
+            path={pagesUrl.ARTICLE_CREATION_PAGE}
+          />
+        )}
+      </div>
       {isArticleListLoading ? (
         <CircularProgress color={"purple"} />
       ) : articleList.length > 0 ? (
@@ -22,14 +29,6 @@ export function BlogPage(): React.JSX.Element {
           {articleList.map((article) => {
             return <ArticleCard key={article.id} article={article} />;
           })}
-
-          {/* TODO: ajouter bouton ici if authenticated + renvoie page création article */}
-          {isAuthenticated && (
-            <NavigationButton
-              label="Ajouter un article"
-              path={pagesUrl.ARTICLE_CREATION_PAGE}
-            />
-          )}
         </div>
       ) : (
         <EmptyArticlePlaceholder />

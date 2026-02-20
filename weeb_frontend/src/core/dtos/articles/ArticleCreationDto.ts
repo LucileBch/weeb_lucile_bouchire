@@ -2,5 +2,5 @@
 export interface ArticleCreationDto {
   title: string;
   content: string;
-  image: string | null;
+  image: File | null;
 }

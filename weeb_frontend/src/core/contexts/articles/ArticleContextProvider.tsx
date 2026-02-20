@@ -73,13 +73,20 @@ export function ArticleContextProvider({
 
   const createNewArticle = useCallback(
     async (articleCreationDto: ArticleCreationDto): Promise<ArticleDto> => {
-      const payload = {
-        title: articleCreationDto.title,
-        content: articleCreationDto.content,
-        image: articleCreationDto.image,
-      };
+      const formData = new FormData();
+      formData.append("title", articleCreationDto.title);
+      formData.append("content", articleCreationDto.content);
 
-      return await postArticle(endpoints.getOrPostArticles, payload);
+      if (articleCreationDto.image) {
+        formData.append("image", articleCreationDto.image);
+      }
+
+      const newArticle = await postArticle(
+        endpoints.getOrPostArticles,
+        formData,
+      );
+      setArticleList((prevList) => [newArticle, ...prevList]);
+      return newArticle;
     },
     [postArticle],
   );
