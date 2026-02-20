@@ -6,6 +6,7 @@ from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from django.conf import settings
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -37,24 +38,25 @@ class MyTokenObtainPairView(TokenObtainPairView):
         response = super().post(request, *args, **kwargs)
         
         if response.status_code == 200:
+            jwt_settings = settings.SIMPLE_JWT
             access_token = response.data.get('access')
             refresh_token = response.data.get('refresh')
 
             response.set_cookie(
-                key='access_token',
+                key=jwt_settings['AUTH_COOKIE'],
                 value=access_token,
-                httponly=True,
-                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
-                samesite='Lax',
+                httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
+                secure=jwt_settings['AUTH_COOKIE_SECURE'],
+                samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
                 path='/'
             )
 
             response.set_cookie(
-                key='refresh_token',
+                key=jwt_settings['AUTH_COOKIE_REFRESH'],
                 value=refresh_token,
-                httponly=True,
-                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
-                samesite='Lax',
+                httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
+                secure=jwt_settings['AUTH_COOKIE_SECURE'],
+                samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
                 path='/api/auth/refresh-token/'
             )
 
@@ -80,14 +82,15 @@ class MyTokenRefreshView(TokenRefreshView):
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == 200:
+            jwt_settings = settings.SIMPLE_JWT
             access_token = response.data.get('access')
 
             response.set_cookie(
-                key='access_token',
+                key=jwt_settings['AUTH_COOKIE'],
                 value=access_token,
-                httponly=True,
-                secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
-                samesite='Lax',
+                httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
+                secure=jwt_settings['AUTH_COOKIE_SECURE'],
+                samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
                 path='/'
             )
             
@@ -95,11 +98,11 @@ class MyTokenRefreshView(TokenRefreshView):
             new_refresh = response.data.get('refresh')
             if new_refresh:
                 response.set_cookie(
-                    key='refresh_token',
+                    key=jwt_settings['AUTH_COOKIE_REFRESH'],
                     value=new_refresh,
-                    httponly=True,
-                    secure=os.getenv('JWT_COOKIE_SECURE', 'False') == 'True',
-                    samesite='Lax',
+                    httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
+                    secure=jwt_settings['AUTH_COOKIE_SECURE'],
+                    samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
                     path='/api/auth/refresh-token/'
                 )  
                 del response.data['refresh']
@@ -119,7 +122,7 @@ class LogoutView(APIView):
 
         if refresh_token:
             try:
-                # 2. Blacklister refresh token in DB
+                # 2. Blacklist refresh token in DB
                 token = RefreshToken(refresh_token)
                 token.blacklist()
             except TokenError:
@@ -131,9 +134,11 @@ class LogoutView(APIView):
             {"message": "Déconnexion réussie"}, 
             status=status.HTTP_200_OK
         )
+
+        jwt_settings = settings.SIMPLE_JWT
         
         # 4. clean cookies
-        response.delete_cookie('access_token', path='/')
-        response.delete_cookie('refresh_token', path='/api/auth/refresh-token/')
+        response.delete_cookie('access_token', path='/', samesite=jwt_settings['AUTH_COOKIE_SAMESITE'])
+        response.delete_cookie('refresh_token', path='/api/auth/refresh-token/', samesite=jwt_settings['AUTH_COOKIE_SAMESITE'])
 
         return response

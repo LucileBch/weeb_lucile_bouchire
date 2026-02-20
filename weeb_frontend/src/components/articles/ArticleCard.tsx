@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import NoImage from "../../assets/images/no-image-placeholder.webp";
-import type { ArticleDto } from "../../core/dtos/ArticleDto";
+import type { ArticleDto } from "../../core/dtos/articles/ArticleDto";
 import { resolveUrl } from "../../core/utils/helpers";
 import { Avatar } from "../badges/Avatar";
 import { DateBadge } from "../badges/DateBadge";

@@ -1,5 +1,4 @@
 // ---------- ARTICLE PAGE ---------- //
-
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArticleTemplate } from "../components/articles/ArticleTemplate";

@@ -11,7 +11,7 @@ import { useAuthContext } from "../../core/contexts/auth/AuthContext";
 import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
 import type { UserCreationDto } from "../../core/dtos/user/UserCreationDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
-import { handleNavigation } from "../../core/utils/helpers";
+import { handleNavigationWithTimeout } from "../../core/utils/helpers";
 import {
   validateEmail,
   validateName,
@@ -52,7 +52,7 @@ export function SignUpPage(): React.JSX.Element {
         `Compte créé pour ${formData.first_name} ${formData.last_name}.En attente d'activation par l'administrateur`,
       );
       setIsSuccessSnackbarOpen(true);
-      handleNavigation(navigate, "/");
+      handleNavigationWithTimeout(navigate, pagesUrl.HOME_PAGE, 0);
     },
     [createUser, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );

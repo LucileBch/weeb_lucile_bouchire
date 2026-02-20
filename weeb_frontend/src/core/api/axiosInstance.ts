@@ -1,6 +1,5 @@
 // ---------- AXIOS INSTANCE ---------- //
 import axios from "axios";
-import { getCookie } from "../utils/helpers";
 import { endpoints } from "./endpoints";
 
 export const api = axios.create({
@@ -8,23 +7,16 @@ export const api = axios.create({
   withCredentials: true,
   timeout: 30000,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
 
 /**
  * Request Interceptor
- * Inject access tokens for request.
+ * No need to inject manually access tokens for request.
  */
 api.interceptors.request.use(
   (config) => {
-    const accessToken = getCookie("access_token");
-
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
-    }
-
     return config;
   },
   (error) => {
@@ -68,11 +60,6 @@ api.interceptors.response.use(
           {},
           { withCredentials: true },
         );
-
-        const newAccessToken = getCookie("access_token");
-        if (newAccessToken) {
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        }
 
         return api(originalRequest);
       } catch (refreshError) {

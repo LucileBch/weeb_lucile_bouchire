@@ -1,6 +1,7 @@
 // ---------- CONTACT PAGE ---------- //
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { pagesUrl } from "../app/appConstants";
 import { SubmitButton } from "../components/buttons/SubmitButton";
 import { TextAreaInput } from "../components/inputs/TextAreaInput";
 import { TextInput } from "../components/inputs/TextInput";
@@ -8,7 +9,7 @@ import { useReviewContext } from "../core/contexts/review/ReviewContext";
 import { useSuccessSnarckbarContext } from "../core/contexts/success/SuccessSnackbarContext";
 import type { ReviewDto } from "../core/dtos/ReviewDto";
 import { useForm, type FormValues } from "../core/hooks/useForm";
-import { handleNavigation } from "../core/utils/helpers";
+import { handleNavigationWithTimeout } from "../core/utils/helpers";
 import {
   validateEmail,
   validateName,
@@ -53,7 +54,7 @@ export function ContactPage(): React.JSX.Element {
         `${formData.first_name} ${formData.last_name} merci pour votre avis. Nous reviendrons vers vous rapidement.`,
       );
       setIsSuccessSnackbarOpen(true);
-      handleNavigation(navigate, "/");
+      handleNavigationWithTimeout(navigate, pagesUrl.HOME_PAGE, 0);
     },
     [createNewReview, navigate, setIsSuccessSnackbarOpen, setSuccessMessage],
   );

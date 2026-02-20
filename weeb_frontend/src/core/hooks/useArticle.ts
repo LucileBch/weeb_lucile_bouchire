@@ -1,11 +1,12 @@
 // ---------- ARTICLE HOOK ---------- //
 import { useCallback } from "react";
 import { api } from "../api/axiosInstance";
-import type { ArticleDto } from "../dtos/ArticleDto";
+import type { ArticleDto } from "../dtos/articles/ArticleDto";
 
 interface ArticleHook {
   getAllArticles: (url: string) => Promise<ArticleDto[]>;
   getArticleById: (url: string, id: string) => Promise<ArticleDto>;
+  postArticle: (url: string, payload: FormData) => Promise<ArticleDto>;
 }
 
 export function useArticle(): ArticleHook {
@@ -25,5 +26,13 @@ export function useArticle(): ArticleHook {
     [],
   );
 
-  return { getAllArticles, getArticleById };
+  const postArticle = useCallback(
+    async (url: string, payload: FormData): Promise<ArticleDto> => {
+      const response = await api.post<ArticleDto>(url, payload);
+      return response.data;
+    },
+    [],
+  );
+
+  return { getAllArticles, getArticleById, postArticle };
 }
