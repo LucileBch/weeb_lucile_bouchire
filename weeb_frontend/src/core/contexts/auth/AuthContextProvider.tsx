@@ -63,6 +63,8 @@ export function AuthContextProvider({
   );
 
   const logoutUser = useCallback(async () => {
+    if (isLoggingOut || !actualUser) return;
+
     setIsLoggingOut(true);
 
     try {
@@ -80,6 +82,8 @@ export function AuthContextProvider({
       setIsLoggingOut(false);
     }
   }, [
+    actualUser,
+    isLoggingOut,
     logout,
     setErrorMessage,
     setIsErrorSnackbarOpen,
@@ -88,10 +92,14 @@ export function AuthContextProvider({
   ]);
 
   useEffect(() => {
-    const handleForceLogout = () => logoutUser();
+    const handleForceLogout = () => {
+      if (actualUser) {
+        logoutUser();
+      }
+    };
     window.addEventListener("force-logout", handleForceLogout);
     return () => window.removeEventListener("force-logout", handleForceLogout);
-  }, [logoutUser]);
+  }, [logoutUser, actualUser]);
 
   const authStore: AuthStore = useMemo(
     () => ({

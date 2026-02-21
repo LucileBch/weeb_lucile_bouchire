@@ -11,6 +11,7 @@ export interface ArticleStore {
 
   fetchArticleById(articleId: string): Promise<void>;
   createNewArticle(articleCreationDto: ArticleCreationDto): Promise<ArticleDto>;
+  removeArticleById(articleId: number): Promise<boolean>;
 }
 
 export const ArticleContext = React.createContext<ArticleStore | undefined>(
