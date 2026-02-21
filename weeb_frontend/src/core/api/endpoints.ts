@@ -4,7 +4,7 @@ export const endpoints = {
   postReview: "/reviews/",
 
   // article
-  getOrPostArticles: "/articles/",
+  articles: "/articles/",
 
   // auth
   signup: "/auth/signup/",

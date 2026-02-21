@@ -39,12 +39,10 @@ class MyTokenObtainPairView(TokenObtainPairView):
         
         if response.status_code == 200:
             jwt_settings = settings.SIMPLE_JWT
-            access_token = response.data.get('access')
-            refresh_token = response.data.get('refresh')
 
             response.set_cookie(
                 key=jwt_settings['AUTH_COOKIE'],
-                value=access_token,
+                value=response.data.get('access'),
                 httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
                 secure=jwt_settings['AUTH_COOKIE_SECURE'],
                 samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
@@ -53,11 +51,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
             response.set_cookie(
                 key=jwt_settings['AUTH_COOKIE_REFRESH'],
-                value=refresh_token,
+                value=response.data.get('refresh'),
                 httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
                 secure=jwt_settings['AUTH_COOKIE_SECURE'],
                 samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
-                path='/api/auth/refresh-token/'
+                path='/'
             )
 
             # Delete tokens from JSON response
@@ -77,17 +75,21 @@ class MyTokenRefreshView(TokenRefreshView):
         refresh_token = request.COOKIES.get('refresh_token')
         
         if refresh_token:
-            request.data['refresh'] = refresh_token
+            if not request.data:
+                request._full_data = {'refresh': refresh_token}
+            else:
+                if hasattr(request.data, '_mutable'):
+                    request.data._mutable = True
+                request.data['refresh'] = refresh_token
 
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == 200:
             jwt_settings = settings.SIMPLE_JWT
-            access_token = response.data.get('access')
 
             response.set_cookie(
                 key=jwt_settings['AUTH_COOKIE'],
-                value=access_token,
+                value=response.data.get('access'),
                 httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
                 secure=jwt_settings['AUTH_COOKIE_SECURE'],
                 samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
@@ -103,7 +105,7 @@ class MyTokenRefreshView(TokenRefreshView):
                     httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
                     secure=jwt_settings['AUTH_COOKIE_SECURE'],
                     samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
-                    path='/api/auth/refresh-token/'
+                    path='/'
                 )  
                 del response.data['refresh']
 

@@ -7,6 +7,7 @@ interface ArticleHook {
   getAllArticles: (url: string) => Promise<ArticleDto[]>;
   getArticleById: (url: string, id: string) => Promise<ArticleDto>;
   postArticle: (url: string, payload: FormData) => Promise<ArticleDto>;
+  deleteArticleById: (url: string, id: string) => Promise<void>;
 }
 
 export function useArticle(): ArticleHook {
@@ -34,5 +35,12 @@ export function useArticle(): ArticleHook {
     [],
   );
 
-  return { getAllArticles, getArticleById, postArticle };
+  const deleteArticleById = useCallback(
+    async (url: string, id: string): Promise<void> => {
+      await api.delete(`${url}${id}/`);
+    },
+    [],
+  );
+
+  return { getAllArticles, getArticleById, postArticle, deleteArticleById };
 }
