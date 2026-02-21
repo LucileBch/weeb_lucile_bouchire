@@ -1,6 +1,6 @@
 // ---------- ARTICLE CONTEXT ---------- //
 import React, { useContext } from "react";
-import type { ArticleCreationDto } from "../../dtos/articles/ArticleCreationDto";
+import type { ArticleCreateOrUpdateDto } from "../../dtos/articles/ArticleCreationDto";
 import type { ArticleDto } from "../../dtos/articles/ArticleDto";
 
 export interface ArticleStore {
@@ -10,7 +10,13 @@ export interface ArticleStore {
   isSelectedArticleLoading: boolean;
 
   fetchArticleById(articleId: string): Promise<void>;
-  createNewArticle(articleCreationDto: ArticleCreationDto): Promise<ArticleDto>;
+  createNewArticle(
+    articleCreationDto: ArticleCreateOrUpdateDto,
+  ): Promise<ArticleDto>;
+  updateArticleById(
+    articleUpdateDto: ArticleCreateOrUpdateDto,
+    articleId: number,
+  ): Promise<ArticleDto>;
   removeArticleById(articleId: number): Promise<boolean>;
 }
 

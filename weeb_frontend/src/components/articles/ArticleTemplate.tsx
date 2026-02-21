@@ -10,6 +10,7 @@ import type { ArticleDto } from "../../core/dtos/articles/ArticleDto";
 import {
   formatDate,
   handleNavigationWithTimeout,
+  resolveUrl,
 } from "../../core/utils/helpers";
 import { Avatar } from "../badges/Avatar";
 import { IconButton } from "../buttons/IconButton";
@@ -35,7 +36,13 @@ export function ArticleTemplate({
     return actualUser?.id === article.author.id;
   }, [actualUser?.id, article.author.id]);
 
-  const handleUpdate = useCallback(() => {}, []);
+  const handleUpdate = useCallback(() => {
+    const targetUrl = resolveUrl(pagesUrl.ARTICLE_EDIT_PAGE, {
+      id: article.id,
+    });
+
+    handleNavigationWithTimeout(navigate, targetUrl, 0);
+  }, [article.id, navigate]);
 
   const handleDelete = useCallback(() => {
     setIsConfirmationModalOpen(true);

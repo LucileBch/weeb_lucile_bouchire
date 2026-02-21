@@ -7,6 +7,11 @@ interface ArticleHook {
   getAllArticles: (url: string) => Promise<ArticleDto[]>;
   getArticleById: (url: string, id: string) => Promise<ArticleDto>;
   postArticle: (url: string, payload: FormData) => Promise<ArticleDto>;
+  patchArticleById: (
+    url: string,
+    payload: FormData,
+    id: string,
+  ) => Promise<ArticleDto>;
   deleteArticleById: (url: string, id: string) => Promise<void>;
 }
 
@@ -35,6 +40,14 @@ export function useArticle(): ArticleHook {
     [],
   );
 
+  const patchArticleById = useCallback(
+    async (url: string, payload: FormData, id: string): Promise<ArticleDto> => {
+      const response = await api.patch<ArticleDto>(`${url}${id}/`, payload);
+      return response.data;
+    },
+    [],
+  );
+
   const deleteArticleById = useCallback(
     async (url: string, id: string): Promise<void> => {
       await api.delete(`${url}${id}/`);
@@ -42,5 +55,11 @@ export function useArticle(): ArticleHook {
     [],
   );
 
-  return { getAllArticles, getArticleById, postArticle, deleteArticleById };
+  return {
+    getAllArticles,
+    getArticleById,
+    postArticle,
+    patchArticleById,
+    deleteArticleById,
+  };
 }
