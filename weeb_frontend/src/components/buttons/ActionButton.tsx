@@ -5,7 +5,7 @@ import { CircularProgress } from "../CircularProgress";
 
 interface IProps {
   label: string;
-  isActionInProgress: boolean;
+  isActionInProgress?: boolean;
   onClick(): void;
 }
 
