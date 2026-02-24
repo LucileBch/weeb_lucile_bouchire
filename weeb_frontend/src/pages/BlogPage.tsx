@@ -3,7 +3,7 @@ import { pagesUrl } from "../app/appConstants";
 import { ArticleCard } from "../components/articles/ArticleCard";
 import { EmptyArticlePlaceholder } from "../components/articles/EmptyArticlePlaceholder";
 import { NavigationButton } from "../components/buttons/NavigationButton";
-import { CircularProgress } from "../components/CircularProgress";
+import { LoadingPlaceholder } from "../components/LoadingPlaceholder";
 import { useArticleContext } from "../core/contexts/articles/ArticleContext";
 import { useAuthContext } from "../core/contexts/auth/AuthContext";
 
@@ -23,7 +23,7 @@ export function BlogPage(): React.JSX.Element {
         )}
       </div>
       {isArticleListLoading ? (
-        <CircularProgress color={"purple"} />
+        <LoadingPlaceholder />
       ) : articleList.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
           {articleList.map((article) => {

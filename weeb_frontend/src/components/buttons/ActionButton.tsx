@@ -28,6 +28,7 @@ export function ActionButton({
       }}
       onClick={onClick}
       disabled={isActionInProgress}
+      type="button"
       className={`basic-button ${isActionInProgress ? "cursor-default opacity-70" : ""}`}
     >
       {isActionInProgress ? <CircularProgress color="purple" /> : label}

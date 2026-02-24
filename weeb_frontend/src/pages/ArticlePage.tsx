@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArticleTemplate } from "../components/articles/ArticleTemplate";
-import { CircularProgress } from "../components/CircularProgress";
+import { LoadingPlaceholder } from "../components/LoadingPlaceholder";
 import { useArticleContext } from "../core/contexts/articles/ArticleContext";
 
 export function ArticlePage(): React.JSX.Element {
@@ -21,7 +21,7 @@ export function ArticlePage(): React.JSX.Element {
   return (
     <div className="flex flex-col items-center gap-4 py-5 text-center md:gap-8">
       {isSelectedArticleLoading ? (
-        <CircularProgress color={"purple"} />
+        <LoadingPlaceholder />
       ) : selectedArticle ? (
         <ArticleTemplate article={selectedArticle} />
       ) : (

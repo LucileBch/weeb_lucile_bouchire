@@ -12,6 +12,7 @@ export const pagesUrl = {
 
   // authenticated url
   ARTICLE_CREATION_PAGE: "/articles/new",
+  ARTICLE_EDIT_PAGE: "/articles/:id/edit",
 
   // error url
   ERROR_404: "*",

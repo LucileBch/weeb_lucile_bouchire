@@ -2,6 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { ArticleCreationPage } from "../../pages/(authenticated)/ArticleCreationPage";
+import { ArticleEditPage } from "../../pages/(authenticated)/ArticleEditPage";
 import { ForgotPasswordPage } from "../../pages/(authentication)/ForgotPasswordPage";
 import { LoginPage } from "../../pages/(authentication)/LoginPage";
 import { SignUpPage } from "../../pages/(authentication)/SignUpPage";
@@ -45,6 +46,10 @@ export const AppRouter = createBrowserRouter([
               {
                 path: pagesUrl.ARTICLE_CREATION_PAGE,
                 element: <ArticleCreationPage />,
+              },
+              {
+                path: pagesUrl.ARTICLE_EDIT_PAGE,
+                element: <ArticleEditPage />,
               },
             ],
           },

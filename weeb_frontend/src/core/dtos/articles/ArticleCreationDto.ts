@@ -1,5 +1,5 @@
 // ---------- ARTICLE CREATION DTO ---------- //
-export interface ArticleCreationDto {
+export interface ArticleCreateOrUpdateDto {
   title: string;
   content: string;
   image: File | null;

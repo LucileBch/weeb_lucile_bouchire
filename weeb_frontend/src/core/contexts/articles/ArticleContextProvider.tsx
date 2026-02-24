@@ -8,10 +8,13 @@ import {
 } from "react";
 import { endpoints } from "../../api/endpoints";
 
-import type { ArticleCreationDto } from "../../dtos/articles/ArticleCreationDto";
+import { useNavigate, useParams } from "react-router-dom";
+import { pagesUrl } from "../../../app/appConstants";
+import type { ArticleCreateOrUpdateDto } from "../../dtos/articles/ArticleCreationDto";
 import type { ArticleDto } from "../../dtos/articles/ArticleDto";
 import { useArticle } from "../../hooks/useArticle";
 import { formatServerError } from "../../utils/errorHandler";
+import { resolveUrl } from "../../utils/helpers";
 import { useErrorSnackbarContext } from "../error/ErrorSnackbarContext";
 import { useSuccessSnarckbarContext } from "../success/SuccessSnackbarContext";
 import { ArticleContext } from "./ArticleContext";
@@ -19,8 +22,16 @@ import { ArticleContext } from "./ArticleContext";
 export function ArticleContextProvider({
   children,
 }: Readonly<PropsWithChildren>) {
-  const { getAllArticles, getArticleById, postArticle, deleteArticleById } =
-    useArticle();
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const {
+    getAllArticles,
+    getArticleById,
+    postArticle,
+    patchArticleById,
+    deleteArticleById,
+  } = useArticle();
 
   const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
   const { setSuccessMessage, setIsSuccessSnackbarOpen } =
@@ -73,7 +84,9 @@ export function ArticleContextProvider({
   );
 
   const createNewArticle = useCallback(
-    async (articleCreationDto: ArticleCreationDto): Promise<ArticleDto> => {
+    async (
+      articleCreationDto: ArticleCreateOrUpdateDto,
+    ): Promise<ArticleDto> => {
       const formData = new FormData();
       formData.append("title", articleCreationDto.title);
       formData.append("content", articleCreationDto.content);
@@ -87,6 +100,37 @@ export function ArticleContextProvider({
       return newArticle;
     },
     [postArticle],
+  );
+
+  const updateArticleById = useCallback(
+    async (
+      articleUpdateDto: ArticleCreateOrUpdateDto,
+      articleId: number,
+    ): Promise<ArticleDto> => {
+      const formData = new FormData();
+      formData.append("title", articleUpdateDto.title);
+      formData.append("content", articleUpdateDto.content);
+
+      if (articleUpdateDto.image) {
+        formData.append("image", articleUpdateDto.image);
+      }
+
+      const updatedArticle = await patchArticleById(
+        endpoints.articles,
+        formData,
+        articleId.toString(),
+      );
+
+      setArticleList((prevList) =>
+        prevList.map((art) => (art.id === articleId ? updatedArticle : art)),
+      );
+
+      setSuccessMessage("L'article a été mis à jour avec succès.");
+      setIsSuccessSnackbarOpen(true);
+
+      return updatedArticle;
+    },
+    [patchArticleById, setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const removeArticleById = useCallback(
@@ -116,6 +160,14 @@ export function ArticleContextProvider({
     ],
   );
 
+  const onCancel = useCallback(() => {
+    const targetUrl = id
+      ? resolveUrl(pagesUrl.ARTICLE_PAGE, { id: Number(id) })
+      : pagesUrl.BLOG_PAGE;
+
+    navigate(targetUrl);
+  }, [id, navigate]);
+
   const articleStore = useMemo(
     () => ({
       articleList,
@@ -124,7 +176,9 @@ export function ArticleContextProvider({
       isSelectedArticleLoading,
       fetchArticleById,
       createNewArticle,
+      updateArticleById,
       removeArticleById,
+      onCancel,
     }),
     [
       articleList,
@@ -133,7 +187,9 @@ export function ArticleContextProvider({
       isSelectedArticleLoading,
       fetchArticleById,
       createNewArticle,
+      updateArticleById,
       removeArticleById,
+      onCancel,
     ],
   );
 
