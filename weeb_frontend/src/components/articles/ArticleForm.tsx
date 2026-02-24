@@ -1,6 +1,7 @@
 // ---------- ARTICLE FORM COMPONENT ---------- //
 import { Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
+import { useArticleContext } from "../../core/contexts/articles/ArticleContext";
 import type { ArticleCreateOrUpdateDto } from "../../core/dtos/articles/ArticleCreationDto";
 import type { ArticleDto } from "../../core/dtos/articles/ArticleDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
@@ -8,6 +9,7 @@ import {
   validateName,
   validateNotEmpty,
 } from "../../core/utils/validationRules";
+import { ActionButton } from "../buttons/ActionButton";
 import { IconButton } from "../buttons/IconButton";
 import { OutlinedButton } from "../buttons/OutlinedButton";
 import { SubmitButton } from "../buttons/SubmitButton";
@@ -28,6 +30,8 @@ export function ArticleForm({
   onSubmit,
 }: Readonly<IProps>): React.JSX.Element {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { onCancel } = useArticleContext();
 
   const initialFormValues: FormValues<ArticleCreateOrUpdateDto> = {
     title: initialData?.title ?? "",
@@ -183,7 +187,12 @@ export function ArticleForm({
           </div>
         </div>
 
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex justify-center gap-3">
+          <ActionButton
+            label="Annuler"
+            onClick={onCancel}
+            isActionInProgress={isSubmitting}
+          />
           <SubmitButton label={submitLabel} isSubmitting={isSubmitting} />
         </div>
       </form>

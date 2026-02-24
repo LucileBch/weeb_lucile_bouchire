@@ -18,6 +18,7 @@ export interface ArticleStore {
     articleId: number,
   ): Promise<ArticleDto>;
   removeArticleById(articleId: number): Promise<boolean>;
+  onCancel(): void;
 }
 
 export const ArticleContext = React.createContext<ArticleStore | undefined>(

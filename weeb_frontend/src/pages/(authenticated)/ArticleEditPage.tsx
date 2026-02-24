@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { ArticleForm } from "../../components/articles/ArticleForm";
+import { LoadingPlaceholder } from "../../components/LoadingPlaceholder";
 import { useArticleContext } from "../../core/contexts/articles/ArticleContext";
 import type { ArticleCreateOrUpdateDto } from "../../core/dtos/articles/ArticleCreationDto";
 import type { FormValues } from "../../core/hooks/useForm";
@@ -32,6 +33,10 @@ export function ArticleEditPage(): React.JSX.Element {
     },
     [id, navigate, updateArticleById],
   );
+
+  if (!articleToEdit) {
+    return <LoadingPlaceholder />;
+  }
 
   return (
     <ArticleForm

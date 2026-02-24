@@ -4,6 +4,7 @@ import { endpoints } from "./endpoints";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
   timeout: 30000,
   headers: {
     Accept: "application/json",
@@ -13,20 +14,10 @@ export const api = axios.create({
 /**
  * Request Interceptor
  * No need to inject manually access tokens for request.
- * Send cookies only if user is authenticated
  */
 api.interceptors.request.use(
-  (config) => {
-    const savedUser = localStorage.getItem("user");
-    const hasUser = savedUser !== null && savedUser !== "undefined";
-
-    config.withCredentials = hasUser;
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (config) => config,
+  (error) => Promise.reject(error),
 );
 
 /**

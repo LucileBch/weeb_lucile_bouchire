@@ -8,10 +8,13 @@ import {
 } from "react";
 import { endpoints } from "../../api/endpoints";
 
+import { useNavigate, useParams } from "react-router-dom";
+import { pagesUrl } from "../../../app/appConstants";
 import type { ArticleCreateOrUpdateDto } from "../../dtos/articles/ArticleCreationDto";
 import type { ArticleDto } from "../../dtos/articles/ArticleDto";
 import { useArticle } from "../../hooks/useArticle";
 import { formatServerError } from "../../utils/errorHandler";
+import { resolveUrl } from "../../utils/helpers";
 import { useErrorSnackbarContext } from "../error/ErrorSnackbarContext";
 import { useSuccessSnarckbarContext } from "../success/SuccessSnackbarContext";
 import { ArticleContext } from "./ArticleContext";
@@ -19,6 +22,9 @@ import { ArticleContext } from "./ArticleContext";
 export function ArticleContextProvider({
   children,
 }: Readonly<PropsWithChildren>) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const {
     getAllArticles,
     getArticleById,
@@ -154,6 +160,14 @@ export function ArticleContextProvider({
     ],
   );
 
+  const onCancel = useCallback(() => {
+    const targetUrl = id
+      ? resolveUrl(pagesUrl.ARTICLE_PAGE, { id: Number(id) })
+      : pagesUrl.BLOG_PAGE;
+
+    navigate(targetUrl);
+  }, [id, navigate]);
+
   const articleStore = useMemo(
     () => ({
       articleList,
@@ -164,6 +178,7 @@ export function ArticleContextProvider({
       createNewArticle,
       updateArticleById,
       removeArticleById,
+      onCancel,
     }),
     [
       articleList,
@@ -174,6 +189,7 @@ export function ArticleContextProvider({
       createNewArticle,
       updateArticleById,
       removeArticleById,
+      onCancel,
     ],
   );
 
