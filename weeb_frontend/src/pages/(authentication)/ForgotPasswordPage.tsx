@@ -1,15 +1,18 @@
 // ---------- FORGOT PASSWORD PAGE ---------- //
 import type React from "react";
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
 import { NavLink } from "../../components/links/NavLink";
 import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessSnackbarContext";
+import { useUserContext } from "../../core/contexts/users/UserContext";
 import type { UserCodeRequestDto } from "../../core/dtos/user/UserCodeRequestDto";
-import type { UserResetPasswordDto } from "../../core/dtos/user/UserResetPassword";
+import type { UserResetPasswordDto } from "../../core/dtos/user/UserResetPasswordDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
+import { handleNavigationWithTimeout } from "../../core/utils/helpers";
 import {
   validateEmail,
   validateNotEmpty,
@@ -17,17 +20,18 @@ import {
 } from "../../core/utils/validationRules";
 
 export function ForgotPasswordPage(): React.JSX.Element {
+  const navigate = useNavigate();
+
   const { setSuccessMessage, setIsSuccessSnackbarOpen } =
     useSuccessSnarckbarContext();
+  const { requestResetCode, resetPasswordWithCode } = useUserContext();
 
   const [isEmailSent, setIsEmailSent] = useState<boolean>(false);
 
-  // useForm confirm email before enable reset password
   const initialFormValuesEmail: FormValues<UserCodeRequestDto> = {
     email: "",
   };
 
-  // TODO: backend control for rules
   const validateEmailForm = (formData: FormValues<UserCodeRequestDto>) => {
     const errors: Record<keyof UserCodeRequestDto, string | undefined> =
       {} as Record<keyof UserCodeRequestDto, string | undefined>;
@@ -39,14 +43,15 @@ export function ForgotPasswordPage(): React.JSX.Element {
 
   const onSubmitEmail = useCallback(
     async (formData: FormValues<UserCodeRequestDto>) => {
+      await requestResetCode(formData);
+
       setSuccessMessage(
         `Un code a été envoyé à l'email suivant: ${formData.email}.`,
       );
       setIsSuccessSnackbarOpen(true);
       setIsEmailSent(true);
-      // TODO: navigate to authenticated home page
     },
-    [setIsSuccessSnackbarOpen, setSuccessMessage],
+    [requestResetCode, setIsSuccessSnackbarOpen, setSuccessMessage],
   );
 
   const { formData, formErrors, isSubmitting, handleChange, handleSubmit } =
@@ -76,14 +81,22 @@ export function ForgotPasswordPage(): React.JSX.Element {
 
   const onSubmitReset = useCallback(
     async (formData: FormValues<UserResetPasswordDto>) => {
+      await resetPasswordWithCode(formData);
+
       setSuccessMessage(
         `Le nouveau mot de passe est correctement considéré. (${formData.email}).`,
       );
       setIsSuccessSnackbarOpen(true);
       setIsEmailSent(true);
-      // TODO: navigate to signin page
+
+      handleNavigationWithTimeout(navigate, pagesUrl.LOGIN_PAGE, 0);
     },
-    [setIsSuccessSnackbarOpen, setSuccessMessage],
+    [
+      navigate,
+      resetPasswordWithCode,
+      setIsSuccessSnackbarOpen,
+      setSuccessMessage,
+    ],
   );
 
   const {

@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
     <SuccessSnackbarContextProvider>
       <ErrorSnackbarContextProvider>
         <AuthContextProvider>
-          <RouterProvider router={AppRouter} />{" "}
+          <RouterProvider router={AppRouter} />
         </AuthContextProvider>
       </ErrorSnackbarContextProvider>
     </SuccessSnackbarContextProvider>

@@ -188,11 +188,7 @@ export function ArticleForm({
         </div>
 
         <div className="mt-4 flex justify-center gap-3">
-          <ActionButton
-            label="Annuler"
-            onClick={onCancel}
-            isActionInProgress={isSubmitting}
-          />
+          <ActionButton label="Annuler" onClick={onCancel} />
           <SubmitButton label={submitLabel} isSubmitting={isSubmitting} />
         </div>
       </form>

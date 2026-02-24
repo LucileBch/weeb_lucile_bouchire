@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, PasswordResetCode
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -25,3 +25,10 @@ class CustomUserAdmin(UserAdmin):
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Dates importantes", {"fields": ("last_login", "date_joined")}),
     )
+
+@admin.register(PasswordResetCode)
+class PasswordResetCodeAdmin(admin.ModelAdmin):
+    list_display = ("user", "code", "created_at", "is_used")
+    list_filter = ("is_used", "created_at")
+    search_fields = ("user",)
+    readonly_fields = ("created_at",)

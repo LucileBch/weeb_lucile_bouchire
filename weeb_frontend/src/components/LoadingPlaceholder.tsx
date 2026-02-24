@@ -1,4 +1,4 @@
-// ---------- CIRCULAR PROGRESS COMPONENT ---------- //
+// ---------- LOADING PLACEHOLDER COMPONENT ---------- //
 import type React from "react";
 import Loading from "../assets/images/loading.webp";
 

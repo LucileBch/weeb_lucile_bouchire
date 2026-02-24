@@ -1,5 +1,4 @@
-// might be serializer with Django DRF
-// TBC in the next step
+// ---------- USER REQUEST CODE DTO ---------- //
 export interface UserCodeRequestDto {
   email: string;
 }
