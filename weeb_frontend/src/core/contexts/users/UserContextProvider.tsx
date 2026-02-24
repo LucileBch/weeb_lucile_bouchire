@@ -16,7 +16,7 @@ export function UserContextProvider({ children }: Readonly<PropsWithChildren>) {
         email: userCodeRequestDto.email,
       };
 
-      return await getResetCode(endpoints.passwordResetRequest, payload);
+      return await getResetCode(endpoints.forgotPasswordCodeRequest, payload);
     },
     [getResetCode],
   );
@@ -29,7 +29,7 @@ export function UserContextProvider({ children }: Readonly<PropsWithChildren>) {
         password: userResetPasswordDto.password,
       };
 
-      return await postNewPassword(endpoints.passwordResetConfirm, payload);
+      return await postNewPassword(endpoints.forgotPasswordConfirm, payload);
     },
     [postNewPassword],
   );

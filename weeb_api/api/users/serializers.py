@@ -105,9 +105,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         
         return data
 
-class PasswordResetRequestSerializer(serializers.Serializer):
+class ForgotPasswordCodeRequestSerializer(serializers.Serializer):
     """
-    Password Reset Request Serializer 
+    Forgot Password Code Request Serializer 
     Validate email adress associated to user
     """
     email = serializers.EmailField()
@@ -118,9 +118,9 @@ class PasswordResetRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError("Aucun compte n'est associé à cet email.")
         return value
 
-class PasswordResetConfirmSerializer(serializers.Serializer):
+class ForgotPasswordConfirmSerializer(serializers.Serializer):
     """
-    Password Reset Confirm Serializer
+    Forgot Password Confirm Serializer
     Validate new password
     Code control and invalidation after being used
     """

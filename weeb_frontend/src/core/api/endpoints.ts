@@ -13,6 +13,6 @@ export const endpoints = {
   refreshToken: "/auth/refresh-token/",
 
   // user
-  passwordResetRequest: "auth/password-reset-request/",
-  passwordResetConfirm: "auth/password-reset-confirm/",
+  forgotPasswordCodeRequest: "users/forgot-password-code-request/",
+  forgotPasswordConfirm: "users/forgot-password-confirm/",
 };

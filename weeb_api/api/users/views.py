@@ -2,7 +2,7 @@ import os
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from .models import CustomUser, PasswordResetCode
-from .serializers import RegisterSerializer, MyTokenObtainPairSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
+from .serializers import RegisterSerializer, MyTokenObtainPairSerializer, ForgotPasswordCodeRequestSerializer, ForgotPasswordConfirmSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
@@ -147,13 +147,13 @@ class LogoutView(APIView):
 
         return response
     
-class PasswordResetRequestView(APIView):
+class ForgotPasswordCodeRequestView(APIView):
     """
     Step 1: Forgot Password
     Verify email, generate 6-digit code and send email
     """
     def post(self, request):
-        serializer = PasswordResetRequestSerializer(data=request.data)
+        serializer = ForgotPasswordCodeRequestSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
             user = CustomUser.objects.get(email=email)
@@ -188,13 +188,13 @@ class PasswordResetRequestView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PasswordResetConfirmView(APIView):
+class ForgotPasswordConfirmView(APIView):
     """
     Step 2: Reset Password
     Verify code and update password
     """
     def post(self, request):
-        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer = ForgotPasswordConfirmSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(
