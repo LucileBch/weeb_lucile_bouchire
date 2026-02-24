@@ -1,12 +1,14 @@
 import os
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
-from .models import CustomUser
-from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
+from .models import CustomUser, PasswordResetCode
+from .serializers import RegisterSerializer, MyTokenObtainPairSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.conf import settings
+from .utils import generate_reset_code
+from django.core.mail import send_mail
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -144,3 +146,59 @@ class LogoutView(APIView):
         response.delete_cookie('refresh_token', path='/api/auth/refresh-token/', samesite=jwt_settings['AUTH_COOKIE_SAMESITE'])
 
         return response
+    
+class PasswordResetRequestView(APIView):
+    """
+    Step 1: Forgot Password
+    Verify email, generate 6-digit code and send email
+    """
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            user = CustomUser.objects.get(email=email)
+            
+            # Security: we don't resset a non activ account
+            if not user.is_active:
+                return Response(
+                    {"detail": "Ce compte n'est pas encore activé."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
+            # 1. Clean old code and generate new one
+            PasswordResetCode.objects.filter(user=user, is_used=False).delete()
+            code_obj = PasswordResetCode.objects.create(
+                user=user, 
+                code=generate_reset_code()
+            )
+            
+            # 2. Send email with code
+            send_mail(
+                subject="Réinitialisation de votre mot de passe",
+                message=f"Bonjour {user.first_name}, votre code de sécurité est : {code_obj.code}. Il expire dans 15 minutes.",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            
+            return Response(
+                {"message": "Un code de validation a été envoyé par email."},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetConfirmView(APIView):
+    """
+    Step 2: Reset Password
+    Verify code and update password
+    """
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Votre mot de passe a été modifié avec succès."},
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
