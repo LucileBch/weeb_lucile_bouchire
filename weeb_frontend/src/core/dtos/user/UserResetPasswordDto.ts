@@ -1,5 +1,4 @@
-// might be serializer with Django DRF
-// TBC in the next step
+// ---------- USER RESET PASSWORD DTO ---------- //
 export interface UserResetPasswordDto {
   email: string;
   activationCode: string;
