@@ -8,7 +8,10 @@ export interface ArticleStore {
   isArticleListLoading: boolean;
   selectedArticle: ArticleDto | undefined;
   isSelectedArticleLoading: boolean;
+  totalArticles: number;
+  currentPage: number;
 
+  fetchArticleList(page: number): Promise<void>;
   fetchArticleById(articleId: string): Promise<void>;
   createNewArticle(
     articleCreationDto: ArticleCreateOrUpdateDto,
