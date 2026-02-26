@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Article
 from .serializers import ArticleSerializer
@@ -11,9 +11,11 @@ class ArticleViewSet(viewsets.ModelViewSet):
     Write/Delete : Require authenticated and author
     """
     queryset = Article.objects.select_related('author').all().order_by('-created_at')
-    serializer_class = ArticleSerializer
-    
+    serializer_class = ArticleSerializer    
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
