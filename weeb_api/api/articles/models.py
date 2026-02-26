@@ -8,7 +8,7 @@ class Article(models.Model):
     """
     title = models.CharField("titre", max_length=150, help_text="Titre de l'article requis.")
     content = models.TextField("contenu", blank=True)
-    image = models.ImageField("image", upload_to="articles/images", blank=True, null=True)
+    image = models.ImageField("image", upload_to="articles", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
