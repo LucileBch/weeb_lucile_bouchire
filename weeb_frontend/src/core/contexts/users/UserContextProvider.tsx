@@ -34,8 +34,6 @@ export function UserContextProvider({ children }: Readonly<PropsWithChildren>) {
     [postNewPassword],
   );
 
-  // TODO: when reset user profile info, do not forget to update actual user in auth context
-
   const userStore = useMemo(
     () => ({ requestResetCode, resetPasswordWithCode }),
     [requestResetCode, resetPasswordWithCode],

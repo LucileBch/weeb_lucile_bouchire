@@ -4,6 +4,7 @@ import { api } from "../api/axiosInstance";
 import type { UserCreationDto } from "../dtos/user/UserCreationDto";
 import type { UserDto } from "../dtos/user/UserDto";
 import type { UserLoginDto } from "../dtos/user/UserLoginDto";
+import type { UserUpdateDto } from "../dtos/user/UserUpdateDto";
 
 interface LoginResponse {
   user_data: UserDto;
@@ -13,6 +14,10 @@ interface AuthHook {
   postUser: (url: string, payload: UserCreationDto) => Promise<void>;
   login: (url: string, payload: UserLoginDto) => Promise<LoginResponse>;
   logout: (url: string) => Promise<void>;
+  patchUserData: (
+    url: string,
+    payload: UserUpdateDto,
+  ) => Promise<LoginResponse>;
 }
 
 export function useAuth(): AuthHook {
@@ -35,9 +40,18 @@ export function useAuth(): AuthHook {
     await api.post(url);
   }, []);
 
+  const patchUserData = useCallback(
+    async (url: string, payload: UserUpdateDto): Promise<LoginResponse> => {
+      const response = await api.patch(url, payload);
+      return response.data;
+    },
+    [],
+  );
+
   return {
     postUser,
     login,
     logout,
+    patchUserData,
   };
 }

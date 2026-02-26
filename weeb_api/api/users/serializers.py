@@ -148,7 +148,6 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
         email = data.get('email').lower()
         code_saisi = data.get('activationCode')
 
-        # Récupération du code le plus récent
         reset_entry = PasswordResetCode.objects.filter(
             user__email=email, 
             is_used=False
@@ -163,7 +162,6 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
         if reset_entry.is_expired:
             raise serializers.ValidationError({"activationCode": "Le code a expiré."})
 
-        # On stocke l'entrée pour le save()
         data['reset_entry'] = reset_entry
         return data
 
@@ -175,7 +173,72 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
         user.set_password(new_password)
         user.save()
 
-        # Invalidation du code
+        # Invalidation code
         reset_entry.is_used = True
         reset_entry.save()
         return user
+
+class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    """
+    User Profile Update Serializer
+    Handle profile info changes and optional password change
+    """
+    old_password = serializers.CharField(write_only=True, required=False)
+    new_password = serializers.CharField(
+        write_only=True, 
+        required=False, 
+        min_length=8, 
+        max_length=20
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'email', 'old_password', 'new_password']
+        extra_kwargs = {
+            'email': {'required': False},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+        }
+
+    def validate_new_password(self, value):
+        """
+        Password validation rules
+        """
+        if not re.search(r'[A-Z]', value):
+            raise serializers.ValidationError("Le mot de passe doit contenir au moins une majuscule.")
+        if not re.search(r'[a-z]', value):
+            raise serializers.ValidationError("Le mot de passe doit contenir au moins une minuscule.")
+        if not re.search(r'[0-9]', value):
+            raise serializers.ValidationError("Le mot de passe doit contenir au moins un chiffre.")
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
+            raise serializers.ValidationError("Le mot de passe doit contenir au moins un caractère spécial.")
+        return value
+
+    def validate(self, data):
+        # if user update password
+        if 'new_password' in data:
+            if 'old_password' not in data:
+                raise serializers.ValidationError({"old_password": "L'ancien mot de passe est requis."})
+            
+            user = self.context['request'].user
+            if not user.check_password(data.get('old_password')):
+                raise serializers.ValidationError({"old_password": "L'ancien mot de passe est incorrect."})
+            
+            # check new_password different from old_password
+            if data.get('old_password') == data.get('new_password'):
+                raise serializers.ValidationError({"new_password": "Le nouveau mot de passe doit être différent de l'ancien."})
+
+        return data
+
+    def update(self, instance, validated_data):
+        new_password = validated_data.pop('new_password', None)
+        validated_data.pop('old_password', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if new_password:
+            instance.set_password(new_password)
+        
+        instance.save()
+        return instance

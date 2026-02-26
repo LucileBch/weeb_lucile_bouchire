@@ -11,6 +11,7 @@ export const endpoints = {
   login: "/auth/login/",
   logout: "/auth/logout/",
   refreshToken: "/auth/refresh-token/",
+  updateUserInfos: "/users/me/",
 
   // user
   forgotPasswordCodeRequest: "users/forgot-password-code-request/",

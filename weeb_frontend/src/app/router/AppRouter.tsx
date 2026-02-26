@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { ArticleCreationPage } from "../../pages/(authenticated)/ArticleCreationPage";
 import { ArticleEditPage } from "../../pages/(authenticated)/ArticleEditPage";
+import { ProfilePage } from "../../pages/(authenticated)/ProfilePage";
 import { ForgotPasswordPage } from "../../pages/(authentication)/ForgotPasswordPage";
 import { LoginPage } from "../../pages/(authentication)/LoginPage";
 import { SignUpPage } from "../../pages/(authentication)/SignUpPage";
@@ -39,7 +40,6 @@ export const AppRouter = createBrowserRouter([
           },
 
           // --- PROTECTED ROUTES ---
-          // TODO:  profile page when connected
           {
             element: <ProtectedRoute />,
             children: [
@@ -50,6 +50,10 @@ export const AppRouter = createBrowserRouter([
               {
                 path: pagesUrl.ARTICLE_EDIT_PAGE,
                 element: <ArticleEditPage />,
+              },
+              {
+                path: pagesUrl.PROFILE_PAGE,
+                element: <ProfilePage />,
               },
             ],
           },
