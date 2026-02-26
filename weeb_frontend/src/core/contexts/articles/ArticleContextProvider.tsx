@@ -91,7 +91,7 @@ export function ArticleContextProvider({
       formData.append("title", articleCreationDto.title);
       formData.append("content", articleCreationDto.content);
 
-      if (articleCreationDto.image) {
+      if (articleCreationDto.image instanceof File) {
         formData.append("image", articleCreationDto.image);
       }
 

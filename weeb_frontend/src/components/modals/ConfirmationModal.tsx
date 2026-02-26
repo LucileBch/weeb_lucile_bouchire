@@ -40,11 +40,7 @@ export function ConfirmationModal({
 
           <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
             <div className="w-full sm:w-auto">
-              <ActionButton
-                label="Annuler"
-                isActionInProgress={isActionInProgress}
-                onClick={onClose}
-              />
+              <ActionButton label="Annuler" onClick={onClose} />
             </div>
             <div className="w-full sm:w-auto">
               <ActionButton

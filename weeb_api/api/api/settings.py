@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     # ===== apps =====
     'users',
     'articles',
-    'reviews'
+    'reviews',
+
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 # Custom user model
