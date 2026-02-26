@@ -19,7 +19,7 @@ export function BlogPage(): React.JSX.Element {
   } = useArticleContext();
   const { isAuthenticated } = useAuthContext();
 
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 12;
   const totalPages = Math.ceil(totalArticles / PAGE_SIZE);
 
   const handlePreviousPage = useCallback(() => {
