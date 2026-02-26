@@ -54,11 +54,18 @@ export function MobileNavBar({
             <NavLink label="Blog" path={pagesUrl.BLOG_PAGE} onClick={onClose} />
 
             {isAuthenticated ? (
-              <ActionLink
-                label="Déconnexion"
-                isActionInProgress={isLoggingOut}
-                onClick={handleLogout}
-              />
+              <>
+                <NavLink
+                  label="Profil"
+                  path={pagesUrl.PROFILE_PAGE}
+                  onClick={onClose}
+                />
+                <ActionLink
+                  label="Déconnexion"
+                  isActionInProgress={isLoggingOut}
+                  onClick={handleLogout}
+                />
+              </>
             ) : (
               <>
                 <NavLink

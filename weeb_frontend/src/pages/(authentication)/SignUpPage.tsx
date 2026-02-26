@@ -1,5 +1,5 @@
 // ---------- SIGN UP PAGE ---------- //
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
@@ -25,12 +25,15 @@ export function SignUpPage(): React.JSX.Element {
     useSuccessSnarckbarContext();
   const { createUser } = useAuthContext();
 
-  const initialFormValues: FormValues<UserCreationDto> = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-  };
+  const initialFormValues: FormValues<UserCreationDto> = useMemo(
+    () => ({
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+    }),
+    [],
+  );
 
   const validate = (formData: FormValues<UserCreationDto>) => {
     const errors: Record<keyof UserCreationDto, string | undefined> =

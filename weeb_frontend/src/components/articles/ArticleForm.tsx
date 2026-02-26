@@ -1,6 +1,6 @@
 // ---------- ARTICLE FORM COMPONENT ---------- //
 import { Trash2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useArticleContext } from "../../core/contexts/articles/ArticleContext";
 import type { ArticleCreateOrUpdateDto } from "../../core/dtos/articles/ArticleCreationDto";
 import type { ArticleDto } from "../../core/dtos/articles/ArticleDto";
@@ -33,11 +33,14 @@ export function ArticleForm({
 
   const { onCancel } = useArticleContext();
 
-  const initialFormValues: FormValues<ArticleCreateOrUpdateDto> = {
-    title: initialData?.title ?? "",
-    content: initialData?.content ?? "",
-    image: null,
-  };
+  const initialFormValues: FormValues<ArticleCreateOrUpdateDto> = useMemo(
+    () => ({
+      title: initialData?.title ?? "",
+      content: initialData?.content ?? "",
+      image: null,
+    }),
+    [initialData],
+  );
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     initialData?.image ?? null,
@@ -140,7 +143,6 @@ export function ArticleForm({
           />
 
           <div className="flex flex-col gap-6 rounded-xl border-3 border-dashed border-[var(--color-purple-text)]/30 bg-[var(--color-purple-bg)]/5 p-6 transition-all">
-            {/* LIGNE D'ACTION : Bouton + Nom du fichier + Poubelle */}
             <div className="flex flex-wrap items-center gap-4">
               <OutlinedButton
                 type="button"
@@ -150,11 +152,13 @@ export function ArticleForm({
                 onClick={() => fileInputRef.current?.click()}
               />
 
-              {formData.image && (
+              {(formData.image || previewUrl) && (
                 <div className="flex flex-1 items-center overflow-hidden px-4 py-2">
                   <span className="truncate text-sm text-gray-600 italic">
-                    {/* On affiche le nom du fichier contenu dans l'objet File */}
-                    {(formData.image as File).name}
+                    {/* TODO : update here when cloudinary*/}
+                    {formData.image
+                      ? (formData.image as File).name
+                      : "Image actuelle de l'article"}
                   </span>
 
                   <IconButton
@@ -166,7 +170,6 @@ export function ArticleForm({
               )}
             </div>
 
-            {/* APERÇU : Visible uniquement si une image est sélectionnée */}
             {previewUrl && (
               <div className="flex justify-center border-t border-[var(--color-purple-text)]/10 pt-4">
                 <div className="group relative">

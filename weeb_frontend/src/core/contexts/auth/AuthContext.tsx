@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import type { UserCreationDto } from "../../dtos/user/UserCreationDto";
 import type { UserDto } from "../../dtos/user/UserDto";
 import type { UserLoginDto } from "../../dtos/user/UserLoginDto";
+import type { UserUpdateDto } from "../../dtos/user/UserUpdateDto";
 
 export interface AuthStore {
   actualUser: UserDto | undefined;
@@ -12,6 +13,7 @@ export interface AuthStore {
   createUser(userCreationDto: UserCreationDto): Promise<void>;
   loginUser(userLoginDto: UserLoginDto): Promise<UserDto>;
   logoutUser(): Promise<void>;
+  updateUserSessionData(userUpdateDto: UserUpdateDto): Promise<UserDto>;
 }
 
 export const AuthContext = React.createContext<AuthStore | undefined>(

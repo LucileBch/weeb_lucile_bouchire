@@ -1,14 +1,15 @@
 import os
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status,generics
 from rest_framework.response import Response
 from .models import CustomUser, PasswordResetCode
-from .serializers import RegisterSerializer, MyTokenObtainPairSerializer, ForgotPasswordCodeRequestSerializer, ForgotPasswordConfirmSerializer
+from .serializers import RegisterSerializer, MyTokenObtainPairSerializer, ForgotPasswordCodeRequestSerializer, ForgotPasswordConfirmSerializer, UserProfileUpdateSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.conf import settings
 from .utils import generate_reset_code
 from django.core.mail import send_mail
+from rest_framework.permissions import IsAuthenticated
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -202,3 +203,48 @@ class ForgotPasswordConfirmView(APIView):
                 status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserProfileUpdateView(generics.UpdateAPIView):
+    serializer_class = UserProfileUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        # Préparation de la réponse
+        response = Response({
+            "message": "Profil mis à jour avec succès",
+            "user_data": serializer.data
+        }, status=status.HTTP_200_OK)
+
+        # Si l'email ou le password a changé, on ré-émet les cookies
+        # pour que l'access_token contienne les infos à jour
+        if 'email' in request.data or 'new_password' in request.data:
+            refresh = RefreshToken.for_user(user)
+            jwt_settings = settings.SIMPLE_JWT
+            
+            # On réutilise la même logique que ton MyTokenObtainPairView
+            response.set_cookie(
+                key=jwt_settings['AUTH_COOKIE'],
+                value=str(refresh.access_token),
+                httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
+                secure=jwt_settings['AUTH_COOKIE_SECURE'],
+                samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
+                path='/'
+            )
+            response.set_cookie(
+                key=jwt_settings['AUTH_COOKIE_REFRESH'],
+                value=str(refresh),
+                httponly=jwt_settings['AUTH_COOKIE_HTTP_ONLY'],
+                secure=jwt_settings['AUTH_COOKIE_SECURE'],
+                samesite=jwt_settings['AUTH_COOKIE_SAMESITE'],
+                path='/'
+            )
+
+        return response

@@ -28,11 +28,14 @@ export function DesktopNavBar(): React.JSX.Element {
 
       <div className="flex items-center gap-3">
         {isAuthenticated ? (
-          <ActionButton
-            label="Déconnexion"
-            onClick={handleLogout}
-            isActionInProgress={isLoggingOut}
-          />
+          <>
+            <NavLink label="Profil" path={pagesUrl.PROFILE_PAGE} />
+            <ActionButton
+              label="Déconnexion"
+              onClick={handleLogout}
+              isActionInProgress={isLoggingOut}
+            />
+          </>
         ) : (
           <>
             <NavigationButton label="Connexion" path={pagesUrl.LOGIN_PAGE} />

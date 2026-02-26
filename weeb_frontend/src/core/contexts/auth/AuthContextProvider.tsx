@@ -4,6 +4,7 @@ import { endpoints } from "../../api/endpoints";
 import type { UserCreationDto } from "../../dtos/user/UserCreationDto";
 import type { UserDto } from "../../dtos/user/UserDto";
 import type { UserLoginDto } from "../../dtos/user/UserLoginDto";
+import type { UserUpdateDto } from "../../dtos/user/UserUpdateDto";
 import { useAuth } from "../../hooks/useAuth";
 import { formatServerError } from "../../utils/errorHandler";
 import {
@@ -18,7 +19,7 @@ import { AuthContext, type AuthStore } from "./AuthContext";
 export function AuthContextProvider({
   children,
 }: React.PropsWithChildren): React.JSX.Element {
-  const { postUser, login, logout } = useAuth();
+  const { postUser, login, logout, patchUserData } = useAuth();
 
   const { setErrorMessage, setIsErrorSnackbarOpen } = useErrorSnackbarContext();
   const { setSuccessMessage, setIsSuccessSnackbarOpen } =
@@ -101,11 +102,46 @@ export function AuthContextProvider({
     return () => window.removeEventListener("force-logout", handleForceLogout);
   }, [logoutUser, actualUser]);
 
+  const updateUserSessionData = useCallback(
+    async (userUpdateDto: UserUpdateDto) => {
+      const payload: UserUpdateDto = {
+        first_name: userUpdateDto.first_name,
+        last_name: userUpdateDto.last_name,
+        email: userUpdateDto.email,
+      };
+
+      if (
+        userUpdateDto.new_password &&
+        userUpdateDto.new_password.trim() !== ""
+      ) {
+        payload.new_password = userUpdateDto.new_password;
+        payload.old_password = userUpdateDto.old_password;
+      }
+
+      const response = await patchUserData(endpoints.updateUserInfos, payload);
+      const updatedFields = response.user_data;
+
+      setActualUser((prevUser) => {
+        const updatedUser = prevUser
+          ? { ...prevUser, ...updatedFields }
+          : updatedFields;
+
+        addInLocalStorage("user", updatedUser);
+
+        return updatedUser;
+      });
+
+      return updatedFields;
+    },
+    [patchUserData],
+  );
+
   const authStore: AuthStore = useMemo(
     () => ({
       createUser,
       loginUser,
       logoutUser,
+      updateUserSessionData,
       actualUser,
       isAuthenticated,
       isLoggingOut,
@@ -114,6 +150,7 @@ export function AuthContextProvider({
       createUser,
       loginUser,
       logoutUser,
+      updateUserSessionData,
       actualUser,
       isAuthenticated,
       isLoggingOut,
