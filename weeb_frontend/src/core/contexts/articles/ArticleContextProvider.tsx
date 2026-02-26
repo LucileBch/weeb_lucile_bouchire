@@ -52,10 +52,10 @@ export function ArticleContextProvider({
     useState<boolean>(false);
 
   const fetchArticleList = useCallback(
-    async (page: number = 1): Promise<void> => {
+    async (page: number = 1, searchQuery: string = ""): Promise<void> => {
       try {
         const response = await getAllArticles(
-          `${endpoints.articles}?page=${page}`,
+          `${endpoints.articles}?page=${page}&search=${searchQuery}`,
         );
         setArticleList(response.results);
         setTotalArticles(response.count);

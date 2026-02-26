@@ -11,7 +11,7 @@ export interface ArticleStore {
   totalArticles: number;
   currentPage: number;
 
-  fetchArticleList(page: number): Promise<void>;
+  fetchArticleList(page: number, searchQuery: string): Promise<void>;
   fetchArticleById(articleId: string): Promise<void>;
   createNewArticle(
     articleCreationDto: ArticleCreateOrUpdateDto,
