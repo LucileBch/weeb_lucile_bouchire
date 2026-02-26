@@ -4,7 +4,7 @@ import { api } from "../api/axiosInstance";
 import type { ArticleDto } from "../dtos/articles/ArticleDto";
 
 interface ArticleHook {
-  getAllArticles: (url: string) => Promise<ArticleDto[]>;
+  getAllArticles: (url: string) => Promise<PaginatedResponse<ArticleDto>>;
   getArticleById: (url: string, id: string) => Promise<ArticleDto>;
   postArticle: (url: string, payload: FormData) => Promise<ArticleDto>;
   patchArticleById: (
@@ -15,10 +15,17 @@ interface ArticleHook {
   deleteArticleById: (url: string, id: string) => Promise<void>;
 }
 
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
 export function useArticle(): ArticleHook {
   const getAllArticles = useCallback(
-    async (url: string): Promise<ArticleDto[]> => {
-      const response = await api.get<ArticleDto[]>(url);
+    async (url: string): Promise<PaginatedResponse<ArticleDto>> => {
+      const response = await api.get<PaginatedResponse<ArticleDto>>(url);
       return response.data;
     },
     [],

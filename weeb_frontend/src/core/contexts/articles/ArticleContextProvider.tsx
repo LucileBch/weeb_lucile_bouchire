@@ -41,6 +41,8 @@ export function ArticleContextProvider({
   const [articleList, setArticleList] = useState<ArticleDto[]>([]);
   const [isArticleListLoading, setIsArticleListLoading] =
     useState<boolean>(true);
+  const [totalArticles, setTotalArticles] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // article by Id
   const [selectedArticle, setSelectedArticle] = useState<
@@ -49,18 +51,25 @@ export function ArticleContextProvider({
   const [isSelectedArticleLoading, setIsSelectedArticleLoading] =
     useState<boolean>(false);
 
-  const fetchArticleList = useCallback(async (): Promise<void> => {
-    try {
-      const response = await getAllArticles(endpoints.articles);
-      setArticleList(response);
-    } catch (error) {
-      const errorMessage = formatServerError(error);
-      setErrorMessage(errorMessage);
-      setIsErrorSnackbarOpen(true);
-    } finally {
-      setIsArticleListLoading(false);
-    }
-  }, [getAllArticles, setErrorMessage, setIsErrorSnackbarOpen]);
+  const fetchArticleList = useCallback(
+    async (page: number = 1): Promise<void> => {
+      try {
+        const response = await getAllArticles(
+          `${endpoints.articles}?page=${page}`,
+        );
+        setArticleList(response.results);
+        setTotalArticles(response.count);
+        setCurrentPage(page);
+      } catch (error) {
+        const errorMessage = formatServerError(error);
+        setErrorMessage(errorMessage);
+        setIsErrorSnackbarOpen(true);
+      } finally {
+        setIsArticleListLoading(false);
+      }
+    },
+    [getAllArticles, setErrorMessage, setIsErrorSnackbarOpen],
+  );
 
   useEffect(() => {
     fetchArticleList();
@@ -174,6 +183,9 @@ export function ArticleContextProvider({
       isArticleListLoading,
       selectedArticle,
       isSelectedArticleLoading,
+      totalArticles,
+      currentPage,
+      fetchArticleList,
       fetchArticleById,
       createNewArticle,
       updateArticleById,
@@ -185,6 +197,9 @@ export function ArticleContextProvider({
       isArticleListLoading,
       selectedArticle,
       isSelectedArticleLoading,
+      totalArticles,
+      currentPage,
+      fetchArticleList,
       fetchArticleById,
       createNewArticle,
       updateArticleById,
