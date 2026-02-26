@@ -136,8 +136,6 @@ export function AuthContextProvider({
     [patchUserData],
   );
 
-  console.log("actuel", actualUser);
-
   const authStore: AuthStore = useMemo(
     () => ({
       createUser,

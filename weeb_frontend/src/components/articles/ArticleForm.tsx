@@ -1,6 +1,6 @@
 // ---------- ARTICLE FORM COMPONENT ---------- //
 import { Trash2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useArticleContext } from "../../core/contexts/articles/ArticleContext";
 import type { ArticleCreateOrUpdateDto } from "../../core/dtos/articles/ArticleCreationDto";
 import type { ArticleDto } from "../../core/dtos/articles/ArticleDto";
@@ -33,11 +33,14 @@ export function ArticleForm({
 
   const { onCancel } = useArticleContext();
 
-  const initialFormValues: FormValues<ArticleCreateOrUpdateDto> = {
-    title: initialData?.title ?? "",
-    content: initialData?.content ?? "",
-    image: null,
-  };
+  const initialFormValues: FormValues<ArticleCreateOrUpdateDto> = useMemo(
+    () => ({
+      title: initialData?.title ?? "",
+      content: initialData?.content ?? "",
+      image: null,
+    }),
+    [initialData],
+  );
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     initialData?.image ?? null,

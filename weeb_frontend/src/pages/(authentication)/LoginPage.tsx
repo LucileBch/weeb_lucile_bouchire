@@ -1,5 +1,5 @@
 // ---------- LOGIN PAGE ---------- //
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
@@ -24,10 +24,13 @@ export function LoginPage(): React.JSX.Element {
     useSuccessSnarckbarContext();
   const { loginUser } = useAuthContext();
 
-  const initialFormValues: FormValues<UserLoginDto> = {
-    email: "",
-    password: "",
-  };
+  const initialFormValues: FormValues<UserLoginDto> = useMemo(
+    () => ({
+      email: "",
+      password: "",
+    }),
+    [],
+  );
 
   const validate = (formData: FormValues<UserLoginDto>) => {
     const errors: Record<keyof UserLoginDto, string | undefined> = {} as Record<

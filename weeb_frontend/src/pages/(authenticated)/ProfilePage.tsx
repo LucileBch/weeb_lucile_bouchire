@@ -1,5 +1,5 @@
 // ---------- PROFILE PAGE ---------- //
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
 import { PasswordInput } from "../../components/inputs/PasswordInput";
 import { TextInput } from "../../components/inputs/TextInput";
@@ -19,13 +19,16 @@ export function ProfilePage(): React.JSX.Element {
     useSuccessSnarckbarContext();
   const { updateUserSessionData, actualUser } = useAuthContext();
 
-  const initialFormValues: FormValues<UserUpdateDto> = {
-    first_name: actualUser?.first_name ?? "",
-    last_name: actualUser?.last_name ?? "",
-    email: actualUser?.email ?? "",
-    old_password: "",
-    new_password: "",
-  };
+  const initialFormValues: FormValues<UserUpdateDto> = useMemo(
+    () => ({
+      first_name: actualUser?.first_name ?? "",
+      last_name: actualUser?.last_name ?? "",
+      email: actualUser?.email ?? "",
+      old_password: "",
+      new_password: "",
+    }),
+    [actualUser],
+  );
 
   const validate = (formData: FormValues<UserUpdateDto>) => {
     const errors: Record<keyof UserUpdateDto, string | undefined> =

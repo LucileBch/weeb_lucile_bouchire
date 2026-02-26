@@ -1,5 +1,5 @@
 // ---------- CONTACT PAGE ---------- //
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../app/appConstants";
 import { SubmitButton } from "../components/buttons/SubmitButton";
@@ -23,13 +23,16 @@ export function ContactPage(): React.JSX.Element {
     useSuccessSnarckbarContext();
   const { createNewReview } = useReviewContext();
 
-  const initialFormValues: FormValues<ReviewDto> = {
-    first_name: "",
-    last_name: "",
-    email: "",
-    subject: "",
-    message: "",
-  };
+  const initialFormValues: FormValues<ReviewDto> = useMemo(
+    () => ({
+      first_name: "",
+      last_name: "",
+      email: "",
+      subject: "",
+      message: "",
+    }),
+    [],
+  );
 
   const validate = (formData: FormValues<ReviewDto>) => {
     const errors: Record<keyof ReviewDto, string | undefined> = {} as Record<

@@ -1,5 +1,5 @@
 // ---------- FORM HOOK ---------- //
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useErrorSnackbarContext } from "../contexts/error/ErrorSnackbarContext";
 import { formatServerError } from "../utils/errorHandler";
 
@@ -24,6 +24,10 @@ export function useForm<T>({
   >({} as Record<keyof T, string | undefined>);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+  useEffect(() => {
+    setFormData(initialFormValues);
+  }, [initialFormValues]);
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -45,6 +49,7 @@ export function useForm<T>({
     );
   }, [formData, validate]);
 
+  // not used anymore but we keep it for future use
   const resetForm = useCallback(() => {
     setFormData(initialFormValues);
     setFormErrors({} as Record<keyof T, string | undefined>);
@@ -63,7 +68,6 @@ export function useForm<T>({
 
       try {
         await onSubmit(formData);
-        resetForm();
       } catch (error) {
         const serverMessage = formatServerError(error);
         setErrorMessage(serverMessage);
@@ -72,14 +76,7 @@ export function useForm<T>({
         setIsSubmitting(false);
       }
     },
-    [
-      formData,
-      onSubmit,
-      resetForm,
-      setErrorMessage,
-      setIsErrorSnackbarOpen,
-      validateForm,
-    ],
+    [formData, onSubmit, setErrorMessage, setIsErrorSnackbarOpen, validateForm],
   );
 
   return useMemo(

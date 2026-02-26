@@ -1,6 +1,6 @@
 // ---------- FORGOT PASSWORD PAGE ---------- //
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { pagesUrl } from "../../app/appConstants";
 import { SubmitButton } from "../../components/buttons/SubmitButton";
@@ -28,9 +28,12 @@ export function ForgotPasswordPage(): React.JSX.Element {
 
   const [isEmailSent, setIsEmailSent] = useState<boolean>(false);
 
-  const initialFormValuesEmail: FormValues<UserCodeRequestDto> = {
-    email: "",
-  };
+  const initialFormValuesEmail: FormValues<UserCodeRequestDto> = useMemo(
+    () => ({
+      email: "",
+    }),
+    [],
+  );
 
   const validateEmailForm = (formData: FormValues<UserCodeRequestDto>) => {
     const errors: Record<keyof UserCodeRequestDto, string | undefined> =
@@ -62,11 +65,14 @@ export function ForgotPasswordPage(): React.JSX.Element {
     });
 
   // useForm reset password
-  const initialFormValuesReset: FormValues<UserResetPasswordDto> = {
-    email: "",
-    activationCode: "",
-    password: "",
-  };
+  const initialFormValuesReset: FormValues<UserResetPasswordDto> = useMemo(
+    () => ({
+      email: "",
+      activationCode: "",
+      password: "",
+    }),
+    [],
+  );
 
   const validateResetForm = (formData: FormValues<UserResetPasswordDto>) => {
     const errors: Record<keyof UserResetPasswordDto, string | undefined> =
