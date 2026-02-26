@@ -1,5 +1,5 @@
 // ---------- ARTICLE FORM COMPONENT ---------- //
-import { Trash2 } from "lucide-react";
+import { Cloud, Laptop, Trash2 } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useArticleContext } from "../../core/contexts/articles/ArticleContext";
 import type { ArticleCreateOrUpdateDto } from "../../core/dtos/articles/ArticleCreationDto";
@@ -67,6 +67,10 @@ export function ArticleForm({
     const file = e.target.files?.[0] || null;
 
     if (file) {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
       setPreviewUrl(URL.createObjectURL(file));
 
       const manualEvent = {
@@ -81,6 +85,10 @@ export function ArticleForm({
   };
 
   const removeImage = () => {
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
     setPreviewUrl(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     const emptyEvent = {
@@ -152,22 +160,31 @@ export function ArticleForm({
                 onClick={() => fileInputRef.current?.click()}
               />
 
-              {(formData.image || previewUrl) && (
-                <div className="flex flex-1 items-center overflow-hidden px-4 py-2">
-                  <span className="truncate text-sm text-gray-600 italic">
-                    {/* TODO : update here when cloudinary*/}
-                    {formData.image
-                      ? (formData.image as File).name
-                      : "Image actuelle de l'article"}
-                  </span>
+              <div className="flex flex-1 items-center overflow-hidden px-4 py-2">
+                <div className="flex items-center gap-2 truncate">
+                  {formData.image instanceof File ? (
+                    <Laptop size={14} />
+                  ) : previewUrl ? (
+                    <Cloud size={14} />
+                  ) : null}
 
+                  <span className="truncate text-sm text-gray-600 italic">
+                    {formData.image instanceof File
+                      ? formData.image.name
+                      : previewUrl
+                        ? initialData?.image?.split("/").pop()
+                        : "Aucune image"}
+                  </span>
+                </div>
+
+                {previewUrl && (
                   <IconButton
                     icon={Trash2}
                     onClick={removeImage}
                     title="Supprimer l'image"
                   />
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {previewUrl && (

@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 INSTALLED_APPS = [
     # ===== Django =====
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,11 +48,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'cloudinary',
 
     # ===== apps =====
     'users',
     'articles',
-    'reviews'
+    'reviews',
+
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 # Custom user model
@@ -177,13 +181,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# ===== MEDIAS =====
-# URL used by navigator
-MEDIA_URL = '/media/'
-# fisical directory on my compu
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
 # ===== EMAILS =====
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@weeb.com")
 
@@ -198,3 +195,27 @@ else:
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+# ===== MEDIAS (for safety) =====
+# URL used by navigator
+MEDIA_URL = '/media/'
+# fisical directory on my compu
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ===== CLOUDINARY =====
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
+    'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+    'API_SECRET': os.getenv("CLOUDINARY_API_SECRET"),
+    'PREFIX': os.getenv("CLOUDINARY_PREFIX"),
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
