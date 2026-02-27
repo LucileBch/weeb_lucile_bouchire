@@ -9,13 +9,14 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.conf import settings
 from .utils import generate_reset_code
 from django.core.mail import send_mail
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     Register ViewSet
     Sign Up controller
     """
+    permission_classes = [AllowAny]
     queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
@@ -35,6 +36,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     Login with authentication controller
     Add tokens in cookies & return user_data
     """
+    permission_classes = [AllowAny]
     serializer_class = MyTokenObtainPairSerializer
 
     def post(self, request, *args, **kwargs):
@@ -73,6 +75,8 @@ class MyTokenRefreshView(TokenRefreshView):
     Custom Refresh ViewSet
     Use refresh_token cookie to create new access_token
     """
+    permission_classes = [AllowAny]
+
     def post(self, request, *args, **kwargs):
         # get refresh_token from cookie
         refresh_token = request.COOKIES.get('refresh_token')
@@ -121,6 +125,8 @@ class LogoutView(APIView):
     Logout View
     Logout user, blacklist refresh token and clean cookies
     """
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         # 1. get token from cookie
         refresh_token = request.COOKIES.get('refresh_token')
@@ -153,6 +159,8 @@ class ForgotPasswordCodeRequestView(APIView):
     Step 1: Forgot Password
     Verify email, generate 6-digit code and send email
     """
+    permission_classes = [AllowAny]
+
     def post(self, request):
         serializer = ForgotPasswordCodeRequestSerializer(data=request.data)
         if serializer.is_valid():
@@ -194,6 +202,8 @@ class ForgotPasswordConfirmView(APIView):
     Step 2: Reset Password
     Verify code and update password
     """
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         serializer = ForgotPasswordConfirmSerializer(data=request.data)
         if serializer.is_valid():

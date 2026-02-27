@@ -1,6 +1,6 @@
 // ---------- BLOG PAGE ---------- //
 import { Search } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { pagesUrl } from "../app/appConstants";
 import { ArticleCard } from "../components/articles/ArticleCard";
 import { EmptyArticlePlaceholder } from "../components/articles/EmptyArticlePlaceholder";
@@ -47,7 +47,10 @@ export function BlogPage(): React.JSX.Element {
   );
 
   const PAGE_SIZE = 12;
-  const totalPages = Math.ceil(totalArticles / PAGE_SIZE);
+  const totalPages = useMemo(
+    () => Math.ceil(totalArticles / PAGE_SIZE),
+    [totalArticles],
+  );
 
   const handlePreviousPage = useCallback(() => {
     fetchArticleList(currentPage - 1, searchQuery);

@@ -7,7 +7,7 @@ export const endpoints = {
   articles: "/articles/",
 
   // auth
-  signup: "/auth/signup/",
+  signup: "/signup/",
   login: "/auth/login/",
   logout: "/auth/logout/",
   refreshToken: "/auth/refresh-token/",
