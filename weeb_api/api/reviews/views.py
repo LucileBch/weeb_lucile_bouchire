@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, mixins
 from .models import Review
 from .serializers import ReviewSerializer
+from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 class ReviewViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -9,6 +10,8 @@ class ReviewViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     Review ViewSet
     POST action only
     """
+    permission_classes = [AllowAny]
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
