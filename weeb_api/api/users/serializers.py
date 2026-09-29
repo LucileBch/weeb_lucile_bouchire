@@ -1,10 +1,19 @@
-import re
 from rest_framework import serializers
 from .models import CustomUser
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, password_validation
+from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import PasswordResetCode
+
+def run_password_validators(password, user, field):
+    """
+    Run AUTH_PASSWORD_VALIDATORS and convert Django errors to DRF errors
+    """
+    try:
+        password_validation.validate_password(password, user=user)
+    except DjangoValidationError as e:
+        raise serializers.ValidationError({field: list(e.messages)})
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
@@ -23,8 +32,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         write_only=True,
-        min_length=8,
-        max_length=20,
         style={'input_type': 'password'}
     )
 
@@ -32,24 +39,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'password']
 
-    def validate_password(self, value):
-        """
-        Custom password validation rules
-        """
-        if not re.search(r'[A-Z]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins une majuscule.")
-        
-        if not re.search(r'[a-z]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins une minuscule.")
-        
-        if not re.search(r'[0-9]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins un chiffre.")
-        
-        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins un caractère spécial.")
-            
-        return value
-    
+    def validate(self, attrs):
+        user = CustomUser(
+            email=attrs.get('email'),
+            first_name=attrs.get('first_name'),
+            last_name=attrs.get('last_name')
+        )
+        run_password_validators(attrs['password'], user, 'password')
+        return attrs
+
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
     
@@ -127,22 +125,9 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
     email = serializers.EmailField()
     activationCode = serializers.CharField(max_length=6)
     password = serializers.CharField(
-        write_only=True, 
-        min_length=8, 
-        max_length=20,
+        write_only=True,
         style={'input_type': 'password'}
     )
-
-    def validate_password(self, value):
-        if not re.search(r'[A-Z]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins une majuscule.")
-        if not re.search(r'[a-z]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins une minuscule.")
-        if not re.search(r'[0-9]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins un chiffre.")
-        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins un caractère spécial.")
-        return value
 
     def validate(self, data):
         email = data.get('email').lower()
@@ -161,6 +146,8 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
 
         if reset_entry.is_expired:
             raise serializers.ValidationError({"activationCode": "Le code a expiré."})
+
+        run_password_validators(data['password'], reset_entry.user, 'password')
 
         data['reset_entry'] = reset_entry
         return data
@@ -185,10 +172,8 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
     """
     old_password = serializers.CharField(write_only=True, required=False)
     new_password = serializers.CharField(
-        write_only=True, 
-        required=False, 
-        min_length=8, 
-        max_length=20
+        write_only=True,
+        required=False
     )
 
     class Meta:
@@ -199,20 +184,6 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
             'first_name': {'required': False},
             'last_name': {'required': False},
         }
-
-    def validate_new_password(self, value):
-        """
-        Password validation rules
-        """
-        if not re.search(r'[A-Z]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins une majuscule.")
-        if not re.search(r'[a-z]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins une minuscule.")
-        if not re.search(r'[0-9]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins un chiffre.")
-        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
-            raise serializers.ValidationError("Le mot de passe doit contenir au moins un caractère spécial.")
-        return value
 
     def validate(self, data):
         # if user update password
@@ -227,6 +198,8 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
             # check new_password different from old_password
             if data.get('old_password') == data.get('new_password'):
                 raise serializers.ValidationError({"new_password": "Le nouveau mot de passe doit être différent de l'ancien."})
+
+            run_password_validators(data['new_password'], user, 'new_password')
 
         return data
 

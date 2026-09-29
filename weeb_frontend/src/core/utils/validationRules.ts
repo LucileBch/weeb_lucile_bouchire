@@ -36,8 +36,8 @@ export function validatePassword(password: string): string | undefined {
   if (!/[a-z]/.test(password))
     return "Le mot de passe doit contenir une minuscule";
   if (!/\d/.test(password)) return "Le mot de passe doit contenir un chiffre";
-  if (!/[@$!%*?&]/.test(password))
-    return "Le mot de passe doit contenir un caractère spécial (@$!%*?&)";
+  if (!/[^A-Za-z0-9\s]/.test(password))
+    return "Le mot de passe doit contenir un caractère spécial";
   if (/\s/.test(password))
     return "Le mot de passe ne doit pas contenir d'espaces";
 
