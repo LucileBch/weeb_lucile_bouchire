@@ -12,10 +12,7 @@ import { useSuccessSnarckbarContext } from "../../core/contexts/success/SuccessS
 import type { UserLoginDto } from "../../core/dtos/user/UserLoginDto";
 import { useForm, type FormValues } from "../../core/hooks/useForm";
 import { handleNavigationWithTimeout } from "../../core/utils/helpers";
-import {
-  validateEmail,
-  validatePassword,
-} from "../../core/utils/validationRules";
+import { validateEmail } from "../../core/utils/validationRules";
 
 export function LoginPage(): React.JSX.Element {
   const navigate = useNavigate();
@@ -39,7 +36,9 @@ export function LoginPage(): React.JSX.Element {
     >;
 
     errors.email = validateEmail(formData.email);
-    errors.password = validatePassword(formData.password);
+    errors.password = formData.password
+      ? undefined
+      : "Le mot de passe est requis";
 
     return errors;
   };
