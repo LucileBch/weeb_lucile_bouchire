@@ -150,7 +150,7 @@ class LogoutView(APIView):
         
         # 4. clean cookies
         response.delete_cookie('access_token', path='/', samesite=jwt_settings['AUTH_COOKIE_SAMESITE'])
-        response.delete_cookie('refresh_token', path='/api/auth/refresh-token/', samesite=jwt_settings['AUTH_COOKIE_SAMESITE'])
+        response.delete_cookie('refresh_token', path='/', samesite=jwt_settings['AUTH_COOKIE_SAMESITE'])
 
         return response
     
