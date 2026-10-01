@@ -1,7 +1,9 @@
 // ---------- ERROR HANDLER ---------- //
 import { AxiosError } from "axios";
 
-type DjangoErrorData = Record<string, string[]> | { message?: string };
+type DjangoErrorData =
+  | Record<string, string[]>
+  | { message?: string; detail?: string };
 
 export const formatServerError = (error: unknown): string => {
   // 1. If not an axios error, JS crash
@@ -31,11 +33,24 @@ export const formatServerError = (error: unknown): string => {
     }
   }
 
-  // 4. Error 500 or server
+  // 4. Too many requests: Django message
+  if (status === 429) {
+    if (
+      typeof errorData === "object" &&
+      errorData !== null &&
+      "detail" in errorData &&
+      typeof errorData.detail === "string"
+    ) {
+      return errorData.detail;
+    }
+    return "Trop de tentatives. Veuillez réessayer plus tard.";
+  }
+
+  // 5. Error 500 or server
   if (status >= 500) {
     return "Le serveur rencontre un problème technique. Veuillez réessayer plus tard.";
   }
 
-  // 5. fallback
+  // 6. fallback
   return "Une erreur inconnue est survenue.";
 };

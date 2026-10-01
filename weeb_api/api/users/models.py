@@ -38,7 +38,12 @@ class PasswordResetCode(models.Model):
     PasswordResetCode Model
     for forgotten password when user is not connected
     code with 15mn expiration time
+    and invalidation after too many wrong attempts
+    max 3 code requests per hour per account
     """
+    MAX_ATTEMPTS = 5
+    MAX_REQUESTS_PER_HOUR = 3
+
     user = models.ForeignKey(
         CustomUser, 
         on_delete=models.CASCADE, 
@@ -47,6 +52,7 @@ class PasswordResetCode(models.Model):
     code = models.CharField("code de validation", max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField("utilisé", default=False)
+    attempts = models.PositiveSmallIntegerField("tentatives", default=0)
 
     class Meta:
         verbose_name = "Code de réinitialisation"
@@ -58,3 +64,7 @@ class PasswordResetCode(models.Model):
     @property
     def is_expired(self):
         return timezone.now() > self.created_at + timedelta(minutes=15)
+
+    @property
+    def is_locked(self):
+        return self.attempts >= self.MAX_ATTEMPTS

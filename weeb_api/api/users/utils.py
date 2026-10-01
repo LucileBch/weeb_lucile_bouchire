@@ -1,8 +1,7 @@
-import random
-import string
+import secrets
 
 def generate_reset_code():
     """
-    Creates random code with 6 number
+    Creates cryptographically secure random code with 6 number
     """
-    return ''.join(random.choices(string.digits, k=6))
+    return f"{secrets.randbelow(10**6):06d}"
