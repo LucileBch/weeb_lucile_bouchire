@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import PasswordResetCode
+from .utils import revoke_all_user_sessions
 
 def run_password_validators(password, user, field):
     """
@@ -163,6 +164,9 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
         user = reset_entry.user
         user.set_password(new_password)
         user.save()
+
+        # Security: password changed => disconnect all devices
+        revoke_all_user_sessions(user)
 
         # Invalidation code
         reset_entry.is_used = True

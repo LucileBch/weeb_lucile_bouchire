@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.conf import settings
-from .utils import generate_reset_code
+from .utils import generate_reset_code, revoke_all_user_sessions
 from django.core.mail import send_mail
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils import timezone
@@ -240,10 +240,14 @@ class UserProfileUpdateView(generics.UpdateAPIView):
         # Si l'email ou le password a changé, on ré-émet les cookies
         # pour que l'access_token contienne les infos à jour
         if 'email' in request.data or 'new_password' in request.data:
+            # Security: password changed => disconnect all other devices
+            # (must be done before creating the new session below)
+            if 'new_password' in request.data:
+                revoke_all_user_sessions(user)
+
             refresh = RefreshToken.for_user(user)
             jwt_settings = settings.SIMPLE_JWT
             
-            # On réutilise la même logique que ton MyTokenObtainPairView
             response.set_cookie(
                 key=jwt_settings['AUTH_COOKIE'],
                 value=str(refresh.access_token),
