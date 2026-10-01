@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db.models import F
 from .models import CustomUser
 from django.contrib.auth import authenticate, password_validation
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -140,9 +141,18 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
 
         if not reset_entry:
             raise serializers.ValidationError({"activationCode": "Code invalide ou déjà utilisé."})
-        
+
+        # Brute force protection: code invalidated after too many wrong attempts
+        if reset_entry.is_locked:
+            raise serializers.ValidationError({"activationCode": "Trop d'essais. Veuillez demander un nouveau code."})
+
         if reset_entry.code != code_saisi:
-            raise serializers.ValidationError({"activationCode": "Code incorrect."})
+            # Atomic increment in DB to count concurrent requests
+            PasswordResetCode.objects.filter(pk=reset_entry.pk).update(attempts=F('attempts') + 1)
+            remaining = PasswordResetCode.MAX_ATTEMPTS - (reset_entry.attempts + 1)
+            if remaining <= 0:
+                raise serializers.ValidationError({"activationCode": "Trop d'essais. Veuillez demander un nouveau code."})
+            raise serializers.ValidationError({"activationCode": f"Code incorrect. Il vous reste {remaining} essai(s)."})
 
         if reset_entry.is_expired:
             raise serializers.ValidationError({"activationCode": "Le code a expiré."})

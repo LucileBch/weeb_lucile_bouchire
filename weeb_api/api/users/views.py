@@ -10,6 +10,8 @@ from django.conf import settings
 from .utils import generate_reset_code
 from django.core.mail import send_mail
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.utils import timezone
+from datetime import timedelta
 
 class RegisterViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -174,14 +176,23 @@ class ForgotPasswordCodeRequestView(APIView):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
-            # 1. Clean old code and generate new one
-            PasswordResetCode.objects.filter(user=user, is_used=False).delete()
+            # 1. Limit code requests per account (whatever the IP)
+            one_hour_ago = timezone.now() - timedelta(hours=1)
+            PasswordResetCode.objects.filter(user=user, created_at__lt=one_hour_ago).delete()
+            if PasswordResetCode.objects.filter(user=user).count() >= PasswordResetCode.MAX_REQUESTS_PER_HOUR:
+                return Response(
+                    {"detail": "Trop de demandes. Veuillez réessayer dans une heure."},
+                    status=status.HTTP_429_TOO_MANY_REQUESTS
+                )
+
+            # 2. Lock old codes (kept for request count) and generate new one
+            PasswordResetCode.objects.filter(user=user, is_used=False).update(attempts=PasswordResetCode.MAX_ATTEMPTS)
             code_obj = PasswordResetCode.objects.create(
                 user=user, 
                 code=generate_reset_code()
             )
             
-            # 2. Send email with code
+            # 3. Send email with code
             send_mail(
                 subject="Réinitialisation de votre mot de passe",
                 message=f"Bonjour {user.first_name}, votre code de sécurité est : {code_obj.code}. Il expire dans 15 minutes.",
