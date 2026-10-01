@@ -49,7 +49,7 @@ export function ForgotPasswordPage(): React.JSX.Element {
       await requestResetCode(formData);
 
       setSuccessMessage(
-        `Un code a été envoyé à l'email suivant: ${formData.email}.`,
+        `Si un compte actif est associé à ${formData.email}, un code de validation vient d'être envoyé.`,
       );
       setIsSuccessSnackbarOpen(true);
       setIsEmailSent(true);

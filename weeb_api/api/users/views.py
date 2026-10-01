@@ -167,42 +167,35 @@ class ForgotPasswordCodeRequestView(APIView):
         serializer = ForgotPasswordCodeRequestSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
-            user = CustomUser.objects.get(email=email)
-            
-            # Security: we don't resset a non activ account
-            if not user.is_active:
-                return Response(
-                    {"detail": "Ce compte n'est pas encore activé."},
-                    status=status.HTTP_403_FORBIDDEN
-                )
 
-            # 1. Limit code requests per account (whatever the IP)
-            one_hour_ago = timezone.now() - timedelta(hours=1)
-            PasswordResetCode.objects.filter(user=user, created_at__lt=one_hour_ago).delete()
-            if PasswordResetCode.objects.filter(user=user).count() >= PasswordResetCode.MAX_REQUESTS_PER_HOUR:
-                return Response(
-                    {"detail": "Trop de demandes. Veuillez réessayer dans une heure."},
-                    status=status.HTTP_429_TOO_MANY_REQUESTS
-                )
+            # Security: same response whether the account exists or not (no account enumeration).
+            # A code is only sent to an active account, under the request limit.
+            user = CustomUser.objects.filter(email=email, is_active=True).first()
 
-            # 2. Lock old codes (kept for request count) and generate new one
-            PasswordResetCode.objects.filter(user=user, is_used=False).update(attempts=PasswordResetCode.MAX_ATTEMPTS)
-            code_obj = PasswordResetCode.objects.create(
-                user=user, 
-                code=generate_reset_code()
-            )
-            
-            # 3. Send email with code
-            send_mail(
-                subject="Réinitialisation de votre mot de passe",
-                message=f"Bonjour {user.first_name}, votre code de sécurité est : {code_obj.code}. Il expire dans 15 minutes.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
-            
+            if user:
+                # 1. Limit code requests per account (whatever the IP)
+                one_hour_ago = timezone.now() - timedelta(hours=1)
+                PasswordResetCode.objects.filter(user=user, created_at__lt=one_hour_ago).delete()
+
+                if PasswordResetCode.objects.filter(user=user).count() < PasswordResetCode.MAX_REQUESTS_PER_HOUR:
+                    # 2. Lock old codes (kept for request count) and generate new one
+                    PasswordResetCode.objects.filter(user=user, is_used=False).update(attempts=PasswordResetCode.MAX_ATTEMPTS)
+                    code_obj = PasswordResetCode.objects.create(
+                        user=user, 
+                        code=generate_reset_code()
+                    )
+
+                    # 3. Send email with code
+                    send_mail(
+                        subject="Réinitialisation de votre mot de passe",
+                        message=f"Bonjour {user.first_name}, votre code de sécurité est : {code_obj.code}. Il expire dans 15 minutes.",
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[email],
+                        fail_silently=False,
+                    )
+
             return Response(
-                {"message": "Un code de validation a été envoyé par email."},
+                {"message": "Si un compte actif est associé à cet email, un code de validation vient d'être envoyé."},
                 status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

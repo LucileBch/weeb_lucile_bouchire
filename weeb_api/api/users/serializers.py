@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.db.models import F
 from .models import CustomUser
-from django.contrib.auth import authenticate, password_validation
+from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -72,25 +72,25 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         password = attrs.get("password")
         user = CustomUser.objects.filter(email=email).first()
 
-        if user:
-            # 2. check if account is_active
-            if not user.is_active:
-                raise serializers.ValidationError({
-                    "detail": "Votre compte est en attente de validation par l'administrateur."
-                })
-            
-            # 3. check password
-            user_authenticated = authenticate(email=email, password=password)
-            if not user_authenticated:
-                raise serializers.ValidationError({
-                    "detail": "Email ou mot de passe incorrect."
-                })
-        else:
-            # 4. user does not exist
+        # 1. Same message for unknown email and wrong password (no account enumeration)
+        if not user:
+            # hash anyway to keep the same response time as an existing account
+            CustomUser().set_password(password)
             raise serializers.ValidationError({
-                "detail": "Aucun compte trouvé avec cet email."
+                "detail": "Email ou mot de passe incorrect."
             })
-        
+
+        if not user.check_password(password):
+            raise serializers.ValidationError({
+                "detail": "Email ou mot de passe incorrect."
+            })
+
+        # 2. Account status only revealed once the password is proven
+        if not user.is_active:
+            raise serializers.ValidationError({
+                "detail": "Votre compte est en attente de validation par l'administrateur."
+            })
+
         # 
         data = super().validate(attrs)
         
@@ -107,15 +107,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class ForgotPasswordCodeRequestSerializer(serializers.Serializer):
     """
     Forgot Password Code Request Serializer 
-    Validate email adress associated to user
+    Validate email format only: account existence is never revealed
     """
     email = serializers.EmailField()
 
     def validate_email(self, value):
-        value = value.lower()
-        if not CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Aucun compte n'est associé à cet email.")
-        return value
+        return value.lower()
 
 class ForgotPasswordConfirmSerializer(serializers.Serializer):
     """
@@ -139,23 +136,20 @@ class ForgotPasswordConfirmSerializer(serializers.Serializer):
             is_used=False
         ).first()
 
-        if not reset_entry:
-            raise serializers.ValidationError({"activationCode": "Code invalide ou déjà utilisé."})
+        # Security: same message for every failure (unknown email, wrong, expired or locked code)
+        # so that the response never reveals if an account exists
+        invalid_code_error = serializers.ValidationError({
+            "activationCode": f"Code invalide ou expiré. Après {PasswordResetCode.MAX_ATTEMPTS} essais erronés, le code est désactivé : demandez-en un nouveau."
+        })
 
         # Brute force protection: code invalidated after too many wrong attempts
-        if reset_entry.is_locked:
-            raise serializers.ValidationError({"activationCode": "Trop d'essais. Veuillez demander un nouveau code."})
+        if not reset_entry or reset_entry.is_locked or reset_entry.is_expired:
+            raise invalid_code_error
 
         if reset_entry.code != code_saisi:
             # Atomic increment in DB to count concurrent requests
             PasswordResetCode.objects.filter(pk=reset_entry.pk).update(attempts=F('attempts') + 1)
-            remaining = PasswordResetCode.MAX_ATTEMPTS - (reset_entry.attempts + 1)
-            if remaining <= 0:
-                raise serializers.ValidationError({"activationCode": "Trop d'essais. Veuillez demander un nouveau code."})
-            raise serializers.ValidationError({"activationCode": f"Code incorrect. Il vous reste {remaining} essai(s)."})
-
-        if reset_entry.is_expired:
-            raise serializers.ValidationError({"activationCode": "Le code a expiré."})
+            raise invalid_code_error
 
         run_password_validators(data['password'], reset_entry.user, 'password')
 
