@@ -16,7 +16,7 @@ from datetime import timedelta
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,15 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
-
-ALLOWED_HOSTS = []
-
 # Application definition
 INSTALLED_APPS = [
     # ===== Django =====
-    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +40,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    # must stay after staticfiles: its collectstatic override reads the
+    # STATICFILES_STORAGE setting, removed in Django 5.1
+    'cloudinary_storage',
     'cloudinary',
 
     # ===== apps =====
@@ -62,6 +59,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -100,10 +98,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # ===== CORS =====
 # needed for authentication infos send by frontend
 CORS_ALLOW_CREDENTIALS = True 
-# origins
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173", # Frontend dev
-]
 
 # authorized headers
 CORS_ALLOW_HEADERS = [
@@ -147,7 +141,7 @@ DATABASES = {
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
         'OPTIONS': {
-            'sslmode': 'require'
+            'sslmode': config('DB_SSLMODE', default='require'),
         },
     }
 }
