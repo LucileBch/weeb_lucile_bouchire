@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
@@ -12,8 +13,8 @@ def send_activation_email(sender, instance, **kwargs):
         if not old_instance.is_active and instance.is_active:
             send_mail(
                 subject="Votre compte est activé !",
-                message=f"Bonjour {instance.first_name}, votre compte a été activé par l'administrateur."
-                        f"Vous pouvez maintenant vous connecter ici : http://localhost:5173/login",
+                message=f"Bonjour {instance.first_name}, votre compte a été activé par l'administrateur. "
+                        f"Vous pouvez maintenant vous connecter ici : {settings.FRONTEND_URL}/login",
                 from_email=None, # Utilise DEFAULT_FROM_EMAIL
                 recipient_list=[instance.email],
                 fail_silently=False,
