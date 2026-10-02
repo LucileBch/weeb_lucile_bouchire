@@ -48,5 +48,4 @@ DATABASES['default']['CONN_HEALTH_CHECKS'] = True
 # FICHIERS STATIQUES (WHITENOISE)
 # ==============================================================================
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 STORAGES['staticfiles']['BACKEND'] = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

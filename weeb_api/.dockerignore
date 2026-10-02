@@ -1,0 +1,13 @@
+# Secrets: provided at runtime, never baked into the image
+.env
+
+# Local virtualenv (rebuilt from requirements.txt in the image)
+env/
+
+# Generated / local-only files
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
+api/staticfiles/
+api/media/
+**/*.sqlite3
