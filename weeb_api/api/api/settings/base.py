@@ -175,6 +175,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# ===== FRONTEND =====
+# Base URL of the React app, used in links sent by e-mail
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173')
+
 # ===== EMAILS =====
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@weeb.com")
 

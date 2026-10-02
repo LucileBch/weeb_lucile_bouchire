@@ -9,6 +9,9 @@ DEBUG = False
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', cast=Csv())
 
+# Required in production: no localhost fallback in e-mail links
+FRONTEND_URL = config('FRONTEND_URL')
+
 # Render terminates HTTPS at its proxy and forwards plain HTTP to Gunicorn:
 # trust its X-Forwarded-Proto header so Django knows the request was HTTPS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
