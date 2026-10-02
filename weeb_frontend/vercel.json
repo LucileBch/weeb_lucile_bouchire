@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/:match*",
+      "destination": "https://lb-weeb-api.onrender.com/api/:match*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
