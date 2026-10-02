@@ -174,6 +174,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# Destination of collectstatic (served by WhiteNoise)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # ===== FRONTEND =====
 # Base URL of the React app, used in links sent by e-mail
