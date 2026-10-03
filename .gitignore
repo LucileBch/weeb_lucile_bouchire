@@ -38,6 +38,7 @@ htmlcov/
 weeb_frontend/node_modules
 weeb_frontend/dist
 weeb_frontend/dist-ssr
+weeb_frontend/coverage
 weeb_frontend/.env*
 !weeb_frontend/.env.example
 *.local

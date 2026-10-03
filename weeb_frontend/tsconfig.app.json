@@ -10,7 +10,7 @@
     "module": "esnext", // modern JS module syntax
     "moduleResolution": "bundler", // search format with Vite handles imports
     "target": "esnext", // JS output version
-    "types": ["react", "react-dom"], // include React globals
+    "types": ["react", "react-dom", "vitest/globals"], // include React and Vitest (describe, it, expect) globals
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true, // safer object/array indexing
