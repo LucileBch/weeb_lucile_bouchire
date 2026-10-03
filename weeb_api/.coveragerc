@@ -1,0 +1,10 @@
+[run]
+source = api
+omit =
+    */migrations/*
+    */test_*.py
+    */conftest.py
+    */manage.py
+    */api/settings/*
+    */api/asgi.py
+    */api/wsgi.py

@@ -30,6 +30,9 @@ weeb_api/api/staticfiles/
 
 # ===== PYTHON =====
 *.sqlite3
+.pytest_cache/
+.coverage
+htmlcov/
 
 # ===== FRONTEND =====
 weeb_frontend/node_modules

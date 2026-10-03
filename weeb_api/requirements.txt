@@ -1,3 +1,6 @@
+# Production dependencies only (installed in the Docker image).
+# Edit by hand: do not regenerate with `pip freeze`, the local venv also
+# contains the test tools, which belong in requirements-dev.txt.
 asgiref==3.11.1
 certifi==2026.2.25
 charset-normalizer==3.4.4
