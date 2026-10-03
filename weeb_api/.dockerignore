@@ -11,3 +11,12 @@ env/
 api/staticfiles/
 api/media/
 **/*.sqlite3
+
+# Tests: run in CI, not needed in the production image
+**/test_*.py
+api/conftest.py
+pytest.ini
+.coveragerc
+**/.pytest_cache/
+**/.coverage
+requirements-dev.txt
