@@ -1,5 +1,7 @@
 from .base import *
 from decouple import config, Csv
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # ==============================================================================
 # SÉCURITÉ
@@ -49,3 +51,19 @@ DATABASES['default']['CONN_HEALTH_CHECKS'] = True
 # ==============================================================================
 
 STORAGES['staticfiles']['BACKEND'] = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ==============================================================================
+# SUIVI DES ERREURS (SENTRY)
+# ==============================================================================
+
+SENTRY_DSN = config('SENTRY_DSN', default='')
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        # Performance monitoring on 20% of requests (errors are always captured)
+        traces_sample_rate=0.2,
+        # GDPR: no IP address, e-mail or cookies sent to Sentry
+        send_default_pii=False,
+    )
