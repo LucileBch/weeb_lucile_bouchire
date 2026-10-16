@@ -21,12 +21,3 @@ def health_check(request):
 
     # No error: 200 OK, the API and the database are both up
     return JsonResponse({"status": "ok", "database": "ok"})
-
-
-def trigger_error(request):
-    """
-    Temporary view to check that errors reach Sentry
-    """
-    # Unhandled ZeroDivisionError -> 500 response, reported to Sentry
-    division_by_zero = 1 / 0
-    return JsonResponse({"this": "will never be returned"})
