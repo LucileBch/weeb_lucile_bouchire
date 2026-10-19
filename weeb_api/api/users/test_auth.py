@@ -1,10 +1,20 @@
 import pytest
+from datetime import timedelta
 from django.urls import reverse
 from rest_framework import status
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+from rest_framework_simplejwt.tokens import AccessToken
 from articles.models import Article
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def expired_access_token(user):
+    """Correctly signed access token whose lifetime is over"""
+    token = AccessToken.for_user(user)
+    token.set_exp(lifetime=-timedelta(minutes=1))
+    return str(token)
 
 
 def login(client, email, password):
@@ -57,3 +67,34 @@ def test_logout_clears_cookies_and_revokes_refresh_token(api_client, user, passw
     api_client.cookies["refresh_token"] = refresh_token
     response = api_client.post(reverse("token_refresh"))
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_expired_cookie_does_not_block_public_route(api_client, article, expired_access_token):
+    # A visitor coming back after the session expired still sees the articles
+    api_client.cookies["access_token"] = expired_access_token
+
+    response = api_client.get(reverse("article-list"))
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["count"] == 1
+
+
+def test_expired_cookie_is_rejected_on_protected_route(api_client, expired_access_token):
+    # 401 is kept so the front-end can try to refresh the session
+    api_client.cookies["access_token"] = expired_access_token
+
+    response = api_client.post(reverse("article-list"), {"title": "Article"}, format="json")
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert Article.objects.count() == 0
+
+
+def test_logout_clears_cookies_without_valid_session(api_client, expired_access_token):
+    api_client.cookies["access_token"] = expired_access_token
+    api_client.cookies["refresh_token"] = "expired-or-invalid-refresh-token"
+
+    response = api_client.post(reverse("logout"))
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.cookies["access_token"].value == ""
+    assert response.cookies["refresh_token"].value == ""
