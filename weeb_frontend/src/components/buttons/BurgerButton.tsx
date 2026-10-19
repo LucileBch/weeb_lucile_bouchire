@@ -15,6 +15,9 @@ export function BurgerButton({
     <button
       className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--color-purple-bg)] text-white transition-all duration-200 hover:opacity-90 lg:hidden"
       onClick={handleDisplayMobileMenu}
+      // Icon-only button: accessible name for screen readers
+      aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+      aria-expanded={isMenuOpen}
     >
       {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
     </button>
