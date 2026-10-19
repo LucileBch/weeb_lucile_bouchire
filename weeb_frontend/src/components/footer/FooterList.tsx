@@ -15,13 +15,14 @@ export function FooterList({
       <h4>{title}</h4>
       <ul className="flex flex-col gap-1 py-3 text-[var(--color-midnight)]">
         {items.map((item) => (
-          <Link
-            to="#"
-            key={item}
-            className="text-responsive transition-opacity hover:underline hover:opacity-80"
-          >
-            {item}
-          </Link>
+          <li key={item}>
+            <Link
+              to="#"
+              className="text-responsive transition-opacity hover:underline hover:opacity-80"
+            >
+              {item}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>
