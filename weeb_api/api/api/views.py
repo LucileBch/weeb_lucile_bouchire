@@ -1,6 +1,20 @@
+from django.conf import settings
 from django.db import connection  # Django connection to the configured database
 from django.db.utils import DatabaseError  # parent class of every database error
 from django.http import JsonResponse  # HTTP response with a JSON body
+
+
+def api_root(request):
+    """
+    Welcome message at the API root, pointing to the useful routes
+    """
+    return JsonResponse({
+        "name": "Weeb API",
+        "status": "ok",
+        "frontend": settings.FRONTEND_URL,
+        "health": "/health/",
+        "articles": "/api/articles/",
+    })
 
 
 def health_check(request):
