@@ -126,8 +126,9 @@ class LogoutView(APIView):
     """
     Logout View
     Logout user, blacklist refresh token and clean cookies
+    Allowed without a valid session: an expired session must still clear its cookies
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         # 1. get token from cookie
