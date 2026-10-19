@@ -27,6 +27,13 @@ export function HomePage(): React.JSX.Element {
     alert("Abonnement en cours.");
   }, []);
 
+  // Temporary: Sentry reporting check
+  const handleCrash = useCallback(() => {
+    // Fails at runtime: 'undefined' has no 'name' property
+    const user = undefined as unknown as { name: string };
+    console.log(user.name);
+  }, []);
+
   return (
     <>
       {/* section 1 */}
@@ -57,6 +64,8 @@ export function HomePage(): React.JSX.Element {
             label="S'abonner à la newletter"
             onClick={handleSubscription}
           />
+          {/* Temporary: Sentry reporting check */}
+          <OutlinedButton label="Crash Test" onClick={handleCrash} />
         </div>
 
         <Slider images={homeSliderImages} />
