@@ -118,15 +118,14 @@ src/
 │   └── router/         # router configuration
 │   └── layouts/        # global layouts
 ├── assets/             # images, icons, logos
-├── components/         # re-usables components
+├── components/         # reusables components
 ├── core/               # context, hooks, utils,
 │   ├── context/
 │   ├── hooks/
 │   ├── utils/
 │   └── dtos/
 ├── pages/              # main pages
-├── styles/             # style sheets
-│   └── index.css       # main style sheet (Tailwind theme)
+├── index.css           # main style sheet (Tailwind theme)
 └── main.tsx            # entry point (no App.tsx needed with RouterProvider)
 ```
 
@@ -150,13 +149,13 @@ api/
 │   ├── serializers.py      # DRF serializers
 │   ├── tests.py.           # unit tests
 │   ├── urls.py             # articles routes
-│   └── views.py            # APi views / logic
+│   └── views.py            # API views / logic
 │
 ├── reviews/             # reviews app (same)
 │
 ├── users/               # users app (same)
 │
-└── requirements.txxt/   # python dependencies
+└── requirements.txt/   # python dependencies
 ```
 
 ## 🧱 Next steps
